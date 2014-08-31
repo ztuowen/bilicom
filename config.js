@@ -9,10 +9,10 @@
  */
 exports.config={
     "showTime":false,
-    "showWatcherNum":false,
+    "showWatcherNum":true,
     "showUserName":true,
     "reconnect":true,
-    "save":false
+    "save":true
 };
 
 /**

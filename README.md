@@ -1,7 +1,7 @@
-#bili-comment Bilibili 直播弹幕助手
+﻿#bili-comment Bilibili 直播弹幕助手
 
 * 下载和开发文档: [API Documentation](http://bili,micblo.com/)
-* 快速配置工具: [Config](http://bili.micblo.com/#config_builder)
+* 快速配置工具: [Config](http://bili.micblo.com/#config/tool)
 
 `Bilibili 直播弹幕助手` 是一个帮助播主快速查看直播弹幕的工具。
 
@@ -24,17 +24,17 @@
 
 第一次使用需要配置助手。
 
-* 快速配置工具: [Config](http://bili.micblo.com/#config_builder)
+* 快速配置工具: [Config](http://bili.micblo.com/#config/tool)
 
 将生成的 `config.js` 覆盖助手根目录下的同名文件。
 
 ####使用
 
-使用记事本，将以下代码复制并粘贴到记事本，保存为 `start.cmd` (注意:格式必须为 `.cmd` , `.txt`不行)。
+使用记事本，将以下代码复制并粘贴到记事本，保存为 `run.cmd` (注意:格式必须为 `.cmd` , `.txt`不行)。
 
 ```
 node bili-comment.js
 pause
 ```
 
-以后只需要双击运行 `start.cmd` 就可以了。
+以后只需要双击运行 `run.cmd` 就可以了。

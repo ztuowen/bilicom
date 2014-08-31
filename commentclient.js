@@ -4,7 +4,7 @@ var events = require('events'),
     util = require('util');
 //init
 
-function Server(base) {
+function Client(base) {
     var self = this;
     events.EventEmitter.call(this);
     this.base = base;
@@ -63,8 +63,8 @@ function Server(base) {
         self.emit('close');
     });
 }
-util.inherits(Server, events.EventEmitter);
-Server.prototype.connect = function(chatid,userid,pwd) { //连接到服务端
+util.inherits(Client, events.EventEmitter);
+Client.prototype.connect = function(chatid,userid,pwd) { //连接到服务端
     var self = this;
     if (this.state != 0) return;
     this.client.connect(self.base.port, self.base.host, function() {
@@ -85,7 +85,7 @@ Server.prototype.connect = function(chatid,userid,pwd) { //连接到服务端
         self.state = 1;
     });
 }
-Server.prototype.send = function(data) {
+Client.prototype.send = function(data) {
     if(this.client.write(data)){
         this.state = 1;
         return true;
@@ -93,7 +93,7 @@ Server.prototype.send = function(data) {
         return false;
     }
 }
-Server.prototype.sendUnPacked = function(name, para) {
+Client.prototype.sendUnPacked = function(name, para) {
     var data = pack_data(name, para);
     if(this.client.write(data)){
         this.state = 1;
@@ -102,10 +102,10 @@ Server.prototype.sendUnPacked = function(name, para) {
         return false;
     }
 }
-Server.prototype.disconnect = function() {
+Client.prototype.disconnect = function() {
     this.client.destory();
 }
-Server.prototype.deliverData = function (data){
+Client.prototype.deliverData = function (data){
     var self = this;
     if(data.length<2) return this.emit('error', '意外的数据包');
     var index=data.readUInt16BE(0);
@@ -194,4 +194,4 @@ function pack_data(index, payload) {
     bufferdata.write(payload, 4);
     return bufferdata;
 }
-exports.Server = Server;
+exports.Client = Client;

@@ -1,11 +1,11 @@
 ﻿var fs = require('fs');
 
-var CommentServer = require('./commentserver.js').Server;
+var CommentClient = require('./commentclient.js').Client;
 var Bili_live = require('./bili-live.js');
 var config = require('./config.js').config;
 var roomconfig = require('./config.js').liveroom;
 
-var nowserver,fileWriteStream;
+var nowclient,fileWriteStream;
 
 var wOption = {
     flags: 'a',
@@ -14,9 +14,9 @@ var wOption = {
 }
 
 //请勿移除这个 log thanks
-console.log('☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆\n\n欢迎使用 Bili直播弹幕助手 !\n本助手意在帮助播主快速查看直播弹幕\n关于助手的配置信息请看config.js(使用记事本即可修改配置)\n如果您想快速配置,请访问 http://bili.micblo.com/#config_builder 快速生成\n如果存在Bug或者要提一些建议,欢迎百度私信@payne工作室\n想知道更多用法? 请上服务站点:http://bili.micblo.com\n\n☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆')
+console.log('☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆\n\n欢迎使用 Bili直播弹幕助手 !\n本助手意在帮助播主快速查看直播弹幕\n关于助手的配置信息请看config.js(使用记事本即可修改配置)\n如果您想快速配置,请访问 http://bili.micblo.com/#config/tool 快速生成\n如果存在Bug或者要提一些建议,欢迎百度私信@payne工作室\n想知道更多用法? 请上服务站点:http://bili.micblo.com\n\n☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆')
 
-if(isblank(roomconfig.url)&&isblank(roomconfig.roomid)) return console.log("未配置直播室信息.\n请看config.js\n\n如果您想快速配置,请访问 http://bili.micblo.com/#config_builder 快速生成");
+if(isblank(roomconfig.url)&&isblank(roomconfig.roomid)) return console.log("未配置直播室信息.\n请看config.js\n\n如果您想快速配置,请访问 http://bili.micblo.com/#config/tool 快速生成");
 
 console.log("==========配置信息==========");
 console.log("是否显示弹幕发射时间\t: ",config.showTime?"√":"×");
@@ -43,7 +43,7 @@ Bili_live.getLivePageInfo(liveid,function(err,info){
                         console.log("cid : "+info.list[key].cid);
                         console.log("============================");
                         if(info.list[key].cid){
-                            nowserver=connectCommentServer(info.list[key].cid);
+                            nowclient=connectCommentServer(info.list[key].cid);
                             if(config.save) {
                                 var targetPath='./comments';
                                 if (!fs.existsSync(targetPath)) {
@@ -71,14 +71,14 @@ Bili_live.getLivePageInfo(liveid,function(err,info){
 });
 
 function connectCommentServer(cid){
-    var server= new CommentServer();
+    var server= new CommentClient();
     //console.log("目标房间 cid="+cid);
     server.on('server_error', function(error) {
         console.log("服务器发生错误:"+error);
     })
     server.on('close', function() {
         console.log("连接已中断");
-        if(config.reconnect) nowserver=nowserver.connect(cid);
+        if(config.reconnect) nowclient=nowclient.connect(cid);
     })
     server.on('error', function(error) {
         console.log("发生错误:"+error);
