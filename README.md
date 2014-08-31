@@ -1,6 +1,6 @@
 ﻿#bili-comment Bilibili 直播弹幕助手
 
-* 下载和开发文档: [API Documentation](http://bili,micblo.com/)
+* 下载和开发文档: [API Documentation](http://bili.micblo.com/)
 * 快速配置工具: [Config](http://bili.micblo.com/#config/tool)
 
 `Bilibili 直播弹幕助手` 是一个帮助播主快速查看直播弹幕的工具。
