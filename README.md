@@ -14,7 +14,7 @@
 
 ###安装
 
-> 需要安装: Node.js (开发环境 : v0.10.30)
+> 需要安装: Node.js (开发环境 : v0.10.31)
 
 > 需要 `npm install --registry=http://r.cnpmjs.org` 初始化必要的 `node_modules`
 

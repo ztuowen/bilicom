@@ -1,22 +1,24 @@
 ﻿var fs = require('fs');
+var colors = require('colors');
 
 var CommentClient = require('./commentclient.js').Client;
 var Bili_live = require('./bili-live.js');
 var config = require('./config.js').config;
 var roomconfig = require('./config.js').liveroom;
 
-var nowclient,fileWriteStream;
+var nowclient, fileWriteStream;
 
+//配置弹幕保存
 var wOption = {
     flags: 'a',
     encoding: null,
-    mode: 0666
-}
+    mode: '0666'
+};
 
 //请勿移除这个 log thanks
 console.log('☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆\n\n欢迎使用 Bili直播弹幕助手 !\n本助手意在帮助播主快速查看直播弹幕\n关于助手的配置信息请看config.js(使用记事本即可修改配置)\n如果您想快速配置,请访问 http://bili.micblo.com/#config/tool 快速生成\n如果存在Bug或者要提一些建议,欢迎百度私信@payne工作室\n想知道更多用法? 请上服务站点:http://bili.micblo.com\n\n☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆')
 
-if(isblank(roomconfig.url)&&isblank(roomconfig.roomid)) return console.log("未配置直播室信息.\n请看config.js\n\n如果您想快速配置,请访问 http://bili.micblo.com/#config/tool 快速生成");
+if(isblank(roomconfig.url) && isblank(roomconfig.roomid)) return console.log("未配置直播室信息.\n请看config.js\n\n如果您想快速配置,请访问 " + "http://bili.micblo.com/#config/tool".bold.cyan +" 快速生成");
 
 console.log("==========配置信息==========");
 console.log("是否显示弹幕发射时间\t: ",config.showTime?"√":"×");
@@ -26,109 +28,111 @@ console.log("是否断线重连      \t: ",config.reconnect?"√":"×");
 console.log("是否保存弹幕数据\t: ",config.save?"√":"×");
 console.log("============================");
 
-var liveid = roomconfig.roomid?roomconfig.roomid:parseLiveUrl(roomconfig.url);
+var liveid = roomconfig.roomid ? roomconfig.roomid : parseLiveUrl(roomconfig.url);
 
-Bili_live.getLivePageInfo(liveid,function(err,info){
-    if(err) return console.log(err);
-    if(info.state=='LIVE'){
-        Bili_live.getLiveInfo(liveid,function(err,info){
-            if(info.code==0){
-                for(var key in info.list){
-                    //status: PREPARE LIVE END
-                    if(info.list[key].sch_id){
-                        console.log("=========直播间信息=========");
-                        console.log("节目名称 : "+info.list[key].title);
-                        console.log("开始时间 : "+info.list[key].start_at);
-                        console.log("aid : "+info.list[key].aid);
-                        console.log("cid : "+info.list[key].cid);
-                        console.log("============================");
-                        if(info.list[key].cid){
-                            nowclient=connectCommentServer(info.list[key].cid);
-                            if(config.save) {
-                                var targetPath='./comments';
-                                if (!fs.existsSync(targetPath)) {
-                                    fs.mkdirSync(targetPath);
-                                }
-                                fileWriteStream=fs.createWriteStream(targetPath+'/'+info.list[key].cid+'_'+new Date().getTime()+'.source',wOption);
-                                info.list[key].timestamp=new Date().getTime();
-                                fileWriteStream.write(new Buffer(JSON.stringify(info.list[key])));
-                                fileWriteStream.write(new Buffer([0x00,0x00]));
-                            }
-                            return;
-                        }else{
-                            return console.log("无弹幕房间可以进入");
-                        }
-                    }
-                }
-                console.log("无正在直播的节目\n\n如果存在直播节目,请重开再试.");
-            }else{
-                console.log("无法获取直播间信息\n\n请重开再试");
-            }
-        })
-    }else{
-        console.log("无正在直播的节目\n\n如果存在直播节目,请重开再试.");
+/**
+ * Init Chat Client
+ */
+(function(chat_id){
+    console.log(("=========直播间信息=========\nchat_id : " + chat_id.toString() + "\n============================").cyan);
+
+    nowclient=connectCommentServer(chat_id);
+    if(config.save) {
+        var targetPath='./comments';
+        if (!fs.existsSync(targetPath)) {
+            fs.mkdirSync(targetPath);
+        }
+        fileWriteStream=fs.createWriteStream(targetPath+'/'+chat_id+'_'+new Date().getTime()+'.source',wOption);
+        var chat_room_info = {chat_id: chat_id};
+        fileWriteStream.write(new Buffer(JSON.stringify(chat_room_info)));
+        fileWriteStream.write(new Buffer([0x00,0x00]));
     }
-});
+}(liveid));
 
+/**
+ * 连接弹幕服务器
+ * @param cid
+ * @returns {*|Client}
+ */
 function connectCommentServer(cid){
     var server= new CommentClient();
-    //console.log("目标房间 cid="+cid);
+
     server.on('server_error', function(error) {
-        console.log("服务器发生错误:"+error);
-    })
+        console.log(("服务器发生错误:" + error).red);
+    });
     server.on('close', function() {
-        console.log("连接已中断");
+        console.log("连接已中断".red);
         if(config.reconnect) nowclient=nowclient.connect(cid);
-    })
+    });
     server.on('error', function(error) {
-        console.log("发生错误:"+error);
-    })
+        console.log(("发生错误:" + error).red);
+    });
     server.on('login_success', function(num) {
-        if(config.showWatcherNum) console.log("#在线人数: "+num);
+        if(config.showWatcherNum) console.log(("[系统] 在线人数 " + num.toString()).bold.yellow);
         if(fileWriteStream){
             fileWriteStream.write(new Buffer(JSON.stringify({action:"watcherNum",num:num})));
             fileWriteStream.write(new Buffer([0x00]));
         }
-    })
+    });
     server.on('newCommentString', function(data) {
         //server bili-live: playtime(stime) mode fontsize color timestamp(date) rnd pool bili-userID bili-danmuID message
         //xml: stime mode fontsize color date pool? bili-userID bili-danmuID
-        //data=JSON.parse(data);//存在 ' 的BUG
-        data=eval("("+data+")");
+
+        data = JSON.parse(data);
+
+        //data = eval("(" + data + ")");
         //普通视频 length==2 ; live length==3
-        if(data.length!=2 && data.length!=3) return ;//console.log("新弹幕[未格式化]:"+data);//当作异常数据
-        data[0]=data[0].split(',');
-        var date=data[0][4];
-        var msg=data[1];
-        date=DateFormat(date,'hh:mm:ss');//yyyy-MM-dd
-        var username='';
-        if(data.length==3){
-            username=data[2][1]+" : ";
+        if(!data && !data.roomid) return console.log("[弹幕] ".bold.green + "异常数据".red);
+        if(!data.info) return console.log("[弹幕] ".bold.green + "空弹幕".red);
+
+        data = data.info;//ignore other arguments
+
+        //获取时间
+        var date = data[0][4];
+        var msg = data[1];
+        date = DateFormat(date, 'hh:mm:ss');//yyyy-MM-dd
+
+        //获取发布者名称
+        var username = '';
+        if(data.length == 3){
+            username = randomColorText(data[2][1]).bold + " ";
         }
+
         var text='';
-        if(config.showTime) text+='['+date+'] ';
-        if(config.showUserName) text+=username;
-        text+=replaceES(msg);
-        console.log(text);
-        //save
+        if(config.showTime) text += ('[' + date + '] ').toString().yellow;
+        if(config.showUserName) text += username;
+
+        text += replaceES(msg).bold;
+        console.log("[弹幕] ".bold.green + text);
+
+        //save Danmu Info
         if(fileWriteStream){
             fileWriteStream.write(new Buffer(JSON.stringify(data)));
             fileWriteStream.write(new Buffer([0x00]));
         }
-    })
+    });
     server.on('newScrollMessage', function(data) {
         //json {text:"",highlight:?,bgcolor:?,flash:?,tooltip:?}
-        console.log("新滚动信息:"+eval("("+data+")").text);
-    })
+        console.log("新滚动信息:" + eval("("+data+")").text);
+    });
+
     server.on('unknown_bag', function(data) {
-        console.log("异常数据:"+data);
-    })
+        console.log(("异常数据:" + data).toString().red);
+    });
     server.connect(cid);
     return server;
+
+    function randomColorText(text){
+        var _colors = ['yellow', 'red', 'green', 'cyan', 'magenta'];
+        return colors[_colors[Math.ceil(Math.random() * _colors.length - 1)]](text);
+    }
 }
 
+/*
+ UTIL
+ */
 function parseLiveUrl(url){
-    var liveid = url.match(/live.bilibili.com\/live\/(.*?)\.html/);
+    var liveid = (url + "/").match(/live.bilibili.com\/(.*?)\//);
     return liveid[1];
 }
 
@@ -136,10 +140,20 @@ function isblank(text){
     return(!text || text=='');
 }
 function replaceES(text){
-    text=text.replace(/\&lt\;/g,"<");
-    text=text.replace(/\&gt\;/g,">");
-    text=text.replace(/\&amp\;/g,"&");
-    return text;
+    return html_decode(text);
+}
+function html_decode(str)
+{
+    var s;
+    if (str.length == 0) return "";
+    s = str.replace(/&gt;/g, "&");
+    s = s.replace(/&lt;/g, "<");
+    s = s.replace(/&gt;/g, ">");
+    s = s.replace(/&nbsp;/g, " ");
+    s = s.replace(/&#39;/g, "\'");
+    s = s.replace(/&quot;/g, "\"");
+    s = s.replace(/<br>/g, "\n");
+    return s;
 }
 function DateFormat(time,fmt) {
     time=new Date(time * 1000);

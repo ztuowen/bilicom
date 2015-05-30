@@ -1,9 +1,20 @@
 {
   "name": "bilibili-comment",
-  "description":"bilibili comment",
-  "version": "1.0.0",
+  "version": "1.1.0",
+  "description":"Bili直播弹幕助手,意在帮助播主快速查看直播弹幕!",
+  "author": {
+    "name": "Payne",
+    "url": "http://blog.micblo.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.coding.net/payne/bili-comment.git"
+  },
+  "license": "MIT",
+  "homepage": "http://bili.micblo.com",
   "dependencies": {
       "request":"2.40.0",
-      "xmlreader":"0.2.3"
+      "xmlreader":"0.2.3",
+      "colors": "1.1.0"
   }
 }

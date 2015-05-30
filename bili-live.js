@@ -38,14 +38,14 @@ exports.getLiveInfo = function(liveid,callback){
     if(!liveid) return callback("liveid"+lang.a1);
 
     var options = {
-        url: 'http://live.bilibili.com/sch_list/'+liveid+'.json',
+        url: 'http://live.bilibili.com/ajax/schedule/'+liveid,
         gzip: true
     };
 
     function rcallback(error, response, body) {
         if (!error && response.statusCode == 200) {
             var info = JSON.parse(body);
-            return callback(null,info);
+            return callback(null, info);
         }else{
             return callback(lang.b1);
         }
