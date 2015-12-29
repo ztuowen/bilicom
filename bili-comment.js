@@ -24,6 +24,7 @@ console.log("==========配置信息==========");
 console.log("是否显示弹幕发射时间\t: ",config.showTime?"√":"×");
 console.log("是否显示弹幕发送者\t: ",config.showUserName?"√":"×");
 console.log("是否显示直播间人数\t: ",config.showWatcherNum?"√":"×");
+console.log("是否显示欢迎信息\t: ",config.showWelcome?"√":"×");
 console.log("是否断线重连      \t: ",config.reconnect?"√":"×");
 console.log("是否保存弹幕数据\t: ",config.save?"√":"×");
 console.log("============================");
@@ -85,20 +86,31 @@ function connectCommentServer(cid){
         if(!data && !data.roomid) return console.log("[弹幕] ".bold.green + "异常数据".red);
         if(!data.info)
         {
-            if (data.cmd==="SEND_GIFT")
-            {
-                data=data.data;
-                var text='';
-                var date = data.timestamp;
-                date = DateFormat(date, 'hh:mm:ss');//yyyy-MM-dd
-                if(config.showTime) text += ('[' + date + '] ').toString().yellow;
-                var username = selectColorText(data.uname);
-                text += username + " " + colors.yellow(data.action) + " " + colors.red(data.giftName + "x" + data.num);
-                console.log("[弹幕] ".bold.green + text);
-                return;
+            switch (data.cmd) {
+                case "SEND_GIFT":
+                    data=data.data;
+                    var text='';
+                    var date = data.timestamp;
+                    date = DateFormat(date, 'hh:mm:ss');//yyyy-MM-dd
+                    if(config.showTime) text += ('[' + date + '] ').toString().yellow;
+                    var username = selectColorText(data.uname,data.uid).bold;
+                    text += username + " " + colors.yellow(data.action) + " " + colors.red(data.giftName + "x" + data.num);
+                    console.log("[系统] ".bold.yellow + text);
+                    break;
+                case "WELCOME":
+                    if (config.showWelcome){
+                        data=data.data;
+                        var text='';
+                        var username = selectColorText(data.uname,data.uid).bold;
+                        text += colors.yellow("欢迎老爷") + " " + colors.red(data.uname) + " " + colors.red("进入直播间");
+                        console.log("[系统] ".bold.yellow + text);
+                    }
+                    break;
+                default:
+                    //console.log(JSON.stringify(data,null,2));
+                    console.log("[弹幕] ".bold.green + "空弹幕".red);
             }
-            //console.log(JSON.stringify(data,null,2));
-            return console.log("[弹幕] ".bold.green + "空弹幕".red);
+            return;
         }
 
         data = data.info;//ignore other arguments
@@ -111,7 +123,7 @@ function connectCommentServer(cid){
         //获取发布者名称
         var username = '';
         if(data.length == 6){
-            username = selectColorText(data[2][1]).bold + " ";
+            username = selectColorText(data[2][1],data[2][0]).bold + " ";
         }
         if(data[3].length>0) {
             username = colors.blue("(" + data[3][1] + ")") + username;
@@ -146,15 +158,9 @@ function connectCommentServer(cid){
         return colors[_colors[Math.ceil(Math.random() * _colors.length - 1)]](text);
     }
     
-    function selectColorText(text){
-        var k=0;
-        for (var i in text)
-        {
-            k=k+i.charCodeAt(0);
-        }
-
+    function selectColorText(text,id){
         var _colors = ['yellow', 'red', 'green', 'cyan', 'magenta'];
-        return colors[_colors[k % _colors.length]](text);
+        return colors[_colors[id % _colors.length]](text);
     }
 }
 
