@@ -27,6 +27,7 @@ console.log("是否显示弹幕发射时间\t: ",config.showTime?"√":"×");
 console.log("是否显示弹幕发送者\t: ",config.showUserName?"√":"×");
 console.log("是否显示直播间人数\t: ",config.showWatcherNum?"√":"×");
 console.log("是否显示欢迎信息\t: ",config.showWelcome?"√":"×");
+console.log("是否显示弹幕提示\t: ",config.notify?"√":"×");
 console.log("是否断线重连      \t: ",config.reconnect?"√":"×");
 console.log("是否保存弹幕数据\t: ",config.save?"√":"×");
 console.log("是否启动播放器  \t: ",config.mpv?"√":"×");
