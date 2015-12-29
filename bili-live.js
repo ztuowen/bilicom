@@ -76,3 +76,24 @@ exports.getPlayerInfo = function(cid,cookies,callback){
     }
     request(options, rcallback);
 };
+
+exports.getLiveUrls = function(liveid,callback){
+    if(!liveid) return callback("liveid"+lang.a1);
+
+    var options = {
+        url: 'http://live.bilibili.com/api/playurl?cid='+liveid,
+        gzip: true
+    };
+
+    function rcallback(error, response, body) { 
+        if (!error && response.statusCode ==200) {
+            xmlreader.read(body, function (err,res) {
+                if (err) return callback(err);
+                return callback(null,res.video.durl.b1url.text());
+            });
+        } else {
+            return callback(lang.b1);
+        }
+    }
+    request(options,rcallback);
+}

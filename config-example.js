@@ -3,9 +3,11 @@ exports.config={
     "showWatcherNum":true,
     "showUserName":true,
     "showWelcome":true,
+    "notify":true,
     "reconnect":false,
-    "save":false
+    "save":false,
+    "mpv":true
 };
 exports.liveroom={
-    "roomid":"47917"
+    "roomid":"5269"
 };

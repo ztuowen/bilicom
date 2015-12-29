@@ -6,6 +6,7 @@ var CommentClient = require('./commentclient.js').Client;
 var Bili_live = require('./bili-live.js');
 var config = require('./config.js').config;
 var roomconfig = require('./config.js').liveroom;
+var child_process = require('child_process');
 
 var nowclient, fileWriteStream;
 
@@ -28,9 +29,16 @@ console.log("是否显示直播间人数\t: ",config.showWatcherNum?"√":"×");
 console.log("是否显示欢迎信息\t: ",config.showWelcome?"√":"×");
 console.log("是否断线重连      \t: ",config.reconnect?"√":"×");
 console.log("是否保存弹幕数据\t: ",config.save?"√":"×");
+console.log("是否启动播放器\t: ",config.mpv?"√":"×");
 console.log("============================");
 
 var liveid = roomconfig.roomid ? roomconfig.roomid : parseLiveUrl(roomconfig.url);
+
+Bili_live.getLiveUrls(liveid, function(err,url){
+    if (err==null) { 
+        child_process.execFile('mpv',[url],{},null);
+    }
+});
 
 /**
  * Init Chat Client
