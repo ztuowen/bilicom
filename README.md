@@ -19,7 +19,9 @@
 
 > 需要安装: Node.js (开发环境 : v0.10.31)
 
-> 需要 `npm install --registry=http://r.cnpmjs.org` 初始化必要的 `node_modules`
+> 需要 `npm install --registry=http://r.cnpmjs.org` 以及
+
+> `npm install libnotify` 初始化必要的 `node_modules`
 
 ###使用
 
