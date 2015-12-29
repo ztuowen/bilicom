@@ -29,14 +29,20 @@ console.log("是否显示直播间人数\t: ",config.showWatcherNum?"√":"×");
 console.log("是否显示欢迎信息\t: ",config.showWelcome?"√":"×");
 console.log("是否断线重连      \t: ",config.reconnect?"√":"×");
 console.log("是否保存弹幕数据\t: ",config.save?"√":"×");
-console.log("是否启动播放器\t: ",config.mpv?"√":"×");
+console.log("是否启动播放器  \t: ",config.mpv?"√":"×");
 console.log("============================");
 
+/**
+ * If roomconfig is passed with cmdline
+ */
 if (process.argv.length>2)
     roomconfig.roomid=process.argv[2];
 
 var liveid = roomconfig.roomid ? roomconfig.roomid : parseLiveUrl(roomconfig.url);
 
+/**
+ * Open media player
+ */
 Bili_live.getLiveUrls(liveid, function(err,url){
     if (err==null) { 
         //console.log(url);
@@ -102,87 +108,84 @@ function connectCommentServer(cid){
             return console.log("[弹幕] ".bold.green + "异常数据".red);
         }
 
-        if(!data.info)
-        {
-            switch (data.cmd) {
-                case "SEND_GIFT":
+        switch (data.cmd) {
+            case "SEND_GIFT":
+                data=data.data;
+                var text='';
+                var date = data.timestamp;
+                date = DateFormat(date, 'hh:mm:ss');//yyyy-MM-dd
+                if(config.showTime) text += ('[' + date + '] ').toString().yellow;
+                var username = selectColorText(data.uname,data.uid).bold;
+                text += username + " " + colors.yellow(data.action).bold + " " + colors.red(data.giftName + "x" + data.num).bold;
+                console.log("[系统] ".bold.yellow + text);
+                if (config.notify)
+                {
+                    text = "[系统] " + data.uname + " " + data.action + " " + data.giftName + "x" + data.num;
+                    libnotify.notify(text);
+                    libnotify.notify(text);
+                }
+                break;
+            case "WELCOME":
+                if (config.showWelcome){
                     data=data.data;
                     var text='';
-                    var date = data.timestamp;
-                    date = DateFormat(date, 'hh:mm:ss');//yyyy-MM-dd
-                    if(config.showTime) text += ('[' + date + '] ').toString().yellow;
                     var username = selectColorText(data.uname,data.uid).bold;
-                    text += username + " " + colors.yellow(data.action).bold + " " + colors.red(data.giftName + "x" + data.num).bold;
+                    text += colors.yellow("欢迎老爷") + " " + colors.red(data.uname) + " " + colors.yellow("进入直播间");
                     console.log("[系统] ".bold.yellow + text);
                     if (config.notify)
                     {
-                        text = "[系统] " + data.uname + " " + data.action + " " + data.giftName + "x" + data.num;
-                        libnotify.notify(text);
+                        text = "[系统] " + "欢迎老爷" + data.uname + "进入直播间";
                         libnotify.notify(text);
                     }
-                    break;
-                case "WELCOME":
-                    if (config.showWelcome){
-                        data=data.data;
-                        var text='';
-                        var username = selectColorText(data.uname,data.uid).bold;
-                        text += colors.yellow("欢迎老爷") + " " + colors.red(data.uname) + " " + colors.yellow("进入直播间");
-                        console.log("[系统] ".bold.yellow + text);
-                        if (config.notify)
-                        {
-                            text = "[系统] " + "欢迎老爷" + data.uname + "进入直播间";
-                            libnotify.notify(text);
-                        }
+                }
+                break;
+            case "DANMU_MSG":
+                data = data.info;//ignore other arguments
+
+                //获取时间
+                var date = data[0][4];
+                var msg = data[1];
+                date = DateFormat(date, 'hh:mm:ss');//yyyy-MM-dd
+                
+                //获取发布者名称
+                var username = '';
+                if(data.length == 6){
+                    username = selectColorText(data[2][1],data[2][0]).bold + " ";
+                }
+                if(data[3].length>0) {
+                    username = colors.blue("(" + data[3][1] + ")") + username;
+                }
+
+                var text='';
+                if(config.showTime) text += ('[' + date + '] ').toString().yellow;
+                if(config.showUserName) text += username;
+                text += replaceES(msg).bold;
+                text = "[弹幕] ".bold.green + text;
+                console.log(text);
+                
+                if (config.notify)
+                {
+                    text='';
+                    username = '';
+                    if(data.length == 6){
+                        username = data[2][1] + " ";
                     }
-                    break;
-                default:
-                    console.log(JSON.stringify(data,null,2));
-                    console.log("[弹幕] ".bold.green + "空弹幕".red);
-            }
-            return;
+                    if(data[3].length>0) {
+                        username = "(" + data[3][1] + ")" + username;
+                    }
+                    if(config.showUserName) text += username;
+                    text += msg;
+                    text = "[弹幕] " + text;
+
+                    libnotify.notify(text);
+                }
+                break;
+            default:
+                console.log(JSON.stringify(data,null,2));
+                console.log("[弹幕] ".bold.green + "空弹幕".red);
         }
 
-        data = data.info;//ignore other arguments
-
-        //获取时间
-        var date = data[0][4];
-        var msg = data[1];
-        date = DateFormat(date, 'hh:mm:ss');//yyyy-MM-dd
-
-        //获取发布者名称
-        var username = '';
-        if(data.length == 6){
-            username = selectColorText(data[2][1],data[2][0]).bold + " ";
-        }
-        if(data[3].length>0) {
-            username = colors.blue("(" + data[3][1] + ")") + username;
-        }
-
-        var text='';
-        if(config.showTime) text += ('[' + date + '] ').toString().yellow;
-        if(config.showUserName) text += username;
-
-        text += replaceES(msg).bold;
-        text = "[弹幕] ".bold.green + text;
-        console.log(text);
-        if (config.notify)
-        {
-            text='';
-            username = '';
-            if(data.length == 6){
-                username = data[2][1] + " ";
-            }
-            if(data[3].length>0) {
-                username = "(" + data[3][1] + ")" + username;
-            }
-            if(config.showUserName) text += username;
-            text += msg;
-            text = "[弹幕] " + text;
-
-            libnotify.notify(text);
-        }
-
-        //save Danmu Info
+             //save Danmu Info
         if(fileWriteStream){
             fileWriteStream.write(new Buffer(JSON.stringify(data)));
             fileWriteStream.write(new Buffer([0x00]));
@@ -199,11 +202,6 @@ function connectCommentServer(cid){
     server.connect(cid);
     return server;
 
-    function randomColorText(text){
-        var _colors = ['yellow', 'red', 'green', 'cyan', 'magenta'];
-        return colors[_colors[Math.ceil(Math.random() * _colors.length - 1)]](text);
-    }
-    
     function selectColorText(text,id){
         var _colors = ['yellow', 'red', 'green', 'cyan', 'magenta'];
         return colors[_colors[id % _colors.length]](text);

@@ -1,6 +1,6 @@
 {
   "name": "bilibili-comment",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description":"Bili直播弹幕助手,意在帮助播主快速查看直播弹幕!",
   "author": {
     "name": "Payne",
@@ -15,6 +15,7 @@
   "dependencies": {
       "request":"2.40.0",
       "xmlreader":"0.2.3",
-      "colors": "1.1.0"
+      "colors": "1.1.0",
+      "libnotify": "1.0.4"
   }
 }

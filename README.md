@@ -17,7 +17,7 @@
 
 ###安装
 
-> 需要安装: Node.js (开发环境 : v0.10.31)
+> 需要安装: Node.js (开发环境 : v0.10.31)，mpv
 
 > 需要 `npm install --registry=http://r.cnpmjs.org` 以及
 
@@ -25,21 +25,14 @@
 
 ###使用
 
+***由于一些新加的功能，目前只能在linux下使用***
+
 ####配置
 
 第一次使用需要配置助手。
 
-* 快速配置工具: [Config](http://bili.micblo.com/#config/tool)
-
-将生成的 `config.js` 拷贝到助手根目录下。详细配置方法也可以参考`config-example.js`。
+详细配置方法请参考`config-example.js`。
 
 ####使用
 
-使用记事本，将以下代码复制并粘贴到记事本，保存为 `run.cmd` (注意:格式必须为 `.cmd` , `.txt`不行)。
-
-```
-node bili-comment.js
-pause
-```
-
-以后只需要双击运行 `run.cmd` 就可以了。
+安装完成后在本目录下运行 `node bili-comment.js`
