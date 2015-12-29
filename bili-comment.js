@@ -83,7 +83,11 @@ function connectCommentServer(cid){
 
         //data = eval("(" + data + ")");
         //普通视频 length==2 ; live length==3
-        if(!data && !data.roomid) return console.log("[弹幕] ".bold.green + "异常数据".red);
+        if(!data && !data.roomid) {
+            console.log(JSON.stringify(data,null,2));
+            return console.log("[弹幕] ".bold.green + "异常数据".red);
+        }
+
         if(!data.info)
         {
             switch (data.cmd) {
@@ -107,7 +111,7 @@ function connectCommentServer(cid){
                     }
                     break;
                 default:
-                    //console.log(JSON.stringify(data,null,2));
+                    console.log(JSON.stringify(data,null,2));
                     console.log("[弹幕] ".bold.green + "空弹幕".red);
             }
             return;
