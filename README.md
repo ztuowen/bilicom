@@ -29,7 +29,7 @@
 
 * 快速配置工具: [Config](http://bili.micblo.com/#config/tool)
 
-将生成的 `config.js` 覆盖助手根目录下的同名文件。
+将生成的 `config.js` 拷贝到助手根目录下。详细配置方法也可以参考`config-example.js`。
 
 ####使用
 
