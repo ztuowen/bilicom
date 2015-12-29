@@ -5,7 +5,6 @@ var app = function(){
 
     var CommentClient = require('./commentclient.js').Client;
     var Bili_live = require('./bili-live.js');
-    var roomconfig = require('./config.js').liveroom;
     var config={
         "showTime":['t',false,'发射时间'],
         "showUserName":['u',true,'弹幕发送者'],
@@ -113,10 +112,11 @@ var app = function(){
     return {
         init: function() {
             // parse cmdline
+            var liveid;
             if (process.argv.length>2)
-                roomconfig.roomid=process.argv[2];
-
-            var liveid = roomconfig.roomid ? roomconfig.roomid : parseLiveUrl(roomconfig.url);
+                liveid=process.argv[2];
+            else 
+                process.exit(0);
 
             // Create a screen object
             screen = blessed.screen({
