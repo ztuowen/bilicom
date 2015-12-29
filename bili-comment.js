@@ -32,10 +32,14 @@ console.log("是否保存弹幕数据\t: ",config.save?"√":"×");
 console.log("是否启动播放器\t: ",config.mpv?"√":"×");
 console.log("============================");
 
+if (process.argv.length>2)
+    roomconfig.roomid=process.argv[2];
+
 var liveid = roomconfig.roomid ? roomconfig.roomid : parseLiveUrl(roomconfig.url);
 
 Bili_live.getLiveUrls(liveid, function(err,url){
     if (err==null) { 
+        console.log(url);
         child_process.execFile('mpv',[url],{},null);
     }
 });
