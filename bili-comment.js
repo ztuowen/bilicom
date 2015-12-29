@@ -83,7 +83,23 @@ function connectCommentServer(cid){
         //data = eval("(" + data + ")");
         //普通视频 length==2 ; live length==3
         if(!data && !data.roomid) return console.log("[弹幕] ".bold.green + "异常数据".red);
-        if(!data.info) return console.log("[弹幕] ".bold.green + "空弹幕".red);
+        if(!data.info)
+        {
+            if (data.cmd==="SEND_GIFT")
+            {
+                data=data.data;
+                var text='';
+                var date = data.timestamp;
+                date = DateFormat(date, 'hh:mm:ss');//yyyy-MM-dd
+                if(config.showTime) text += ('[' + date + '] ').toString().yellow;
+                var username = selectColorText(data.uname);
+                text += username + " " + colors.yellow(data.action) + " " + colors.red(data.giftName + "x" + data.num);
+                console.log("[弹幕] ".bold.green + text);
+                return;
+            }
+            //console.log(JSON.stringify(data,null,2));
+            return console.log("[弹幕] ".bold.green + "空弹幕".red);
+        }
 
         data = data.info;//ignore other arguments
 
@@ -94,8 +110,11 @@ function connectCommentServer(cid){
 
         //获取发布者名称
         var username = '';
-        if(data.length == 3){
-            username = randomColorText(data[2][1]).bold + " ";
+        if(data.length == 6){
+            username = selectColorText(data[2][1]).bold + " ";
+        }
+        if(data[3].length>0) {
+            username = colors.blue("(" + data[3][1] + ")") + username;
         }
 
         var text='';
@@ -125,6 +144,17 @@ function connectCommentServer(cid){
     function randomColorText(text){
         var _colors = ['yellow', 'red', 'green', 'cyan', 'magenta'];
         return colors[_colors[Math.ceil(Math.random() * _colors.length - 1)]](text);
+    }
+    
+    function selectColorText(text){
+        var k=0;
+        for (var i in text)
+        {
+            k=k+i.charCodeAt(0);
+        }
+
+        var _colors = ['yellow', 'red', 'green', 'cyan', 'magenta'];
+        return colors[_colors[k % _colors.length]](text);
     }
 }
 

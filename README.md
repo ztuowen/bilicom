@@ -1,5 +1,8 @@
 ﻿#bili-comment Bilibili 直播弹幕助手
 
+* Disclaimer, this is a fork of the [original project](https://coding.net/u/payne/p/bili-comment/git) by payne
+
+
 * 下载和开发文档: [API Documentation](http://bili.micblo.com/)
 * 快速配置工具: [Config](http://bili.micblo.com/#config/tool)
 
