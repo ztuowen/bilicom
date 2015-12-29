@@ -1,6 +1,6 @@
 {
   "name": "bilibili-comment",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description":"Bilibili 直播弹幕助手",
   "author": {
     "name": "Payne",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://git.coding.net/payne/bili-comment.git"
+    "url": "https://github.com/ztuowen/bili-comment.git"
   },
   "license": "MIT",
   "homepage": "http://bili.micblo.com",
