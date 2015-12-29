@@ -39,8 +39,9 @@ var liveid = roomconfig.roomid ? roomconfig.roomid : parseLiveUrl(roomconfig.url
 
 Bili_live.getLiveUrls(liveid, function(err,url){
     if (err==null) { 
-        console.log(url);
-        child_process.execFile('mpv',[url],{},null);
+        //console.log(url);
+        var child = child_process.spawn('mpv',[url],{detached:true, stdio: [ 'ignore', 'ignore', 'ignore' ]});
+        child.unref();
     }
 });
 
