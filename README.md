@@ -17,20 +17,10 @@
 
 ###安装
 
-> 需要安装: Node.js (开发环境 : v0.10.31)，mpv
-
-> 需要 `npm install` 初始化必要的 `node_modules`
+> `sudo npm install -g bilibili-comment`
 
 ###使用
 
 ***由于一些新加的功能，目前只能在linux下使用***
 
-####配置
-
-第一次使用需要配置助手。
-
-详细配置方法请参考`config-example.js`。
-
-####使用
-
-安装完成后在本目录下运行 `node bili-comment.js`
+安装完成后运行`bilicom <直播间id>`
