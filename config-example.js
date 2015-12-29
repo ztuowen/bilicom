@@ -1,0 +1,11 @@
+exports.config={
+    "showTime":false,
+    "showWatcherNum":true,
+    "showUserName":true,
+    "showWelcome":true,
+    "reconnect":false,
+    "save":false
+};
+exports.liveroom={
+    "roomid":"47917"
+};
