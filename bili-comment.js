@@ -1,5 +1,6 @@
 ﻿var fs = require('fs');
 var colors = require('colors');
+var libnotify = require('libnotify');
 
 var CommentClient = require('./commentclient.js').Client;
 var Bili_live = require('./bili-live.js');
@@ -98,16 +99,27 @@ function connectCommentServer(cid){
                     date = DateFormat(date, 'hh:mm:ss');//yyyy-MM-dd
                     if(config.showTime) text += ('[' + date + '] ').toString().yellow;
                     var username = selectColorText(data.uname,data.uid).bold;
-                    text += username + " " + colors.yellow(data.action) + " " + colors.red(data.giftName + "x" + data.num);
+                    text += username + " " + colors.yellow(data.action).bold + " " + colors.red(data.giftName + "x" + data.num).bold;
                     console.log("[系统] ".bold.yellow + text);
+                    if (config.notify)
+                    {
+                        text = "[系统] " + data.uname + " " + data.action + " " + data.giftName + "x" + data.num;
+                        libnotify.notify(text);
+                        libnotify.notify(text);
+                    }
                     break;
                 case "WELCOME":
                     if (config.showWelcome){
                         data=data.data;
                         var text='';
                         var username = selectColorText(data.uname,data.uid).bold;
-                        text += colors.yellow("欢迎老爷") + " " + colors.red(data.uname) + " " + colors.red("进入直播间");
+                        text += colors.yellow("欢迎老爷") + " " + colors.red(data.uname) + " " + colors.yellow("进入直播间");
                         console.log("[系统] ".bold.yellow + text);
+                        if (config.notify)
+                        {
+                            text = "[系统] " + "欢迎老爷" + data.uname + "进入直播间";
+                            libnotify.notify(text);
+                        }
                     }
                     break;
                 default:
@@ -138,7 +150,24 @@ function connectCommentServer(cid){
         if(config.showUserName) text += username;
 
         text += replaceES(msg).bold;
-        console.log("[弹幕] ".bold.green + text);
+        text = "[弹幕] ".bold.green + text;
+        console.log(text);
+        if (config.notify)
+        {
+            text='';
+            username = '';
+            if(data.length == 6){
+                username = data[2][1] + " ";
+            }
+            if(data[3].length>0) {
+                username = "(" + data[3][1] + ")" + username;
+            }
+            if(config.showUserName) text += username;
+            text += msg;
+            text = "[弹幕] " + text;
+
+            libnotify.notify(text);
+        }
 
         //save Danmu Info
         if(fileWriteStream){
