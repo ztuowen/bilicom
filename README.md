@@ -1,4 +1,4 @@
-﻿#bili-comment Bilibili 直播弹幕助手
+﻿#bilicom Bilibili 直播弹幕助手
 
 ***DISCLAIMER this is a fork of the [original project](https://coding.net/u/payne/p/bili-comment/git) by payne***
 
