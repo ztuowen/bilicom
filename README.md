@@ -15,8 +15,7 @@
 ###安装
 
 1. 安装所需的软件: nodejs, mpv
-2. 安装本弹幕助手
-> `sudo npm install -g bilibili-comment`
+2. 安装本弹幕助手: `sudo npm install -g bilibili-comment`
 
 ###使用
 
