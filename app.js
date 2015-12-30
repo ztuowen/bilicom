@@ -15,7 +15,7 @@ var app = function(){
 
     var blessed = require('blessed');
     var screen,cmtBox,liveid,viewNum;
-    var cmtList,intervals=[];
+    var intervals=[];
     var footerRight;
 
     var nowclient;
@@ -160,6 +160,7 @@ var app = function(){
                 height: screen.height-2,
                 keys: true,
                 mouse: true,
+                scrollable: true,
                 fg: theme.table.fg
             });
             screen.append(cmtBox);
