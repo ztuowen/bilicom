@@ -131,6 +131,7 @@ var app = function(){
                         process.exit(0);
                         break;
                     case 'm':
+                        cmtBox.insertLine(0,"正在启动播放器".red);
                         runmpv();
                         break;
                     case 'n':
