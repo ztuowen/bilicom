@@ -19,6 +19,7 @@ var app = function(){
     var footerRight;
 
     var nowclient;
+    var notifyConf = {time:4000}; //4s
 
     var theme = {
         "name": "Becca",
@@ -58,7 +59,7 @@ var app = function(){
 
     function drawHeader(liveid){
         var headerText, headerTextNoTags;
-        headerText = ' {bold}Bili-comment{/bold}{white-fg} for ' + liveid + ' ';
+        headerText = ' {bold}Bilicom{/bold}{white-fg} for ' + liveid + ' ';
         headerTextNoTags = ' Bili-comment for ' + liveid + ' ';
 
         var header = blessed.text({
@@ -248,8 +249,7 @@ var app = function(){
                     if (config.notify[1])
                     {
                         text = "[系统] " + data.uname + " " + data.action + " " + data.giftName + "x" + data.num;
-                        libnotify.notify(text);
-                        libnotify.notify(text);
+                        libnotify.notify(text,notifyConf);
                     }
                     break;
                 case "WELCOME":
@@ -262,7 +262,7 @@ var app = function(){
                         if (config.notify[1])
                         {
                             text = "[系统] " + "欢迎老爷" + data.uname + "进入直播间";
-                            libnotify.notify(text);
+                            libnotify.notify(text,notifyConf);
                         }
                     }
                     break;
@@ -304,7 +304,7 @@ var app = function(){
                         text += msg;
                         text = "[弹幕] " + text;
 
-                        libnotify.notify(text);
+                        libnotify.notify(text,notifyConf);
                     }
                     break;
                 default:
