@@ -1,5 +1,5 @@
 {
-  "name": "bilibili-comment",
+  "name": "bilicom",
   "version": "3.0.1",
   "description":"Bilibili 直播弹幕助手",
   "bin": {
