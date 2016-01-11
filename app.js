@@ -257,11 +257,11 @@ var app = function(){
                         data=data.data;
                         var text='';
                         var username = selectColorText(data.uname,data.uid).bold;
-                        text += colors.yellow("欢迎老爷") + " " + colors.red(data.uname) + " " + colors.yellow("进入直播间");
-                        cmtBox.insertLine(0,"[系统] ".bold.yellow + text);
+                        text += colors.yellow("欢迎") + " " + colors.red(data.uname) + " " + colors.yellow("进入直播间");
+                        cmtBox.insertLine(0,"[欢迎] ".bold.yellow + text);
                         if (config.notify[1])
                         {
-                            text = "[系统] " + "欢迎老爷" + data.uname + "进入直播间";
+                            text = "[欢迎] " + "老爷" + data.uname + "进入直播间";
                             libnotify.notify(text,notifyConf);
                         }
                     }
