@@ -9,7 +9,7 @@ var app = function(){
         "showTime":['t',false,'发射时间'],
         "showUserName":['u',true,'弹幕发送者'],
         "showWelcome":['w',true,'欢迎信息'],
-        "notify":['n',true,'弹幕提示'],
+        "notify":['n',false,'弹幕提示'],
     };
     var child_process = require('child_process');
 
@@ -245,10 +245,10 @@ var app = function(){
                     if(config.showTime[1]) text += ('[' + date + '] ').toString().yellow;
                     var username = selectColorText(data.uname,data.uid).bold;
                     text += username + " " + colors.yellow(data.action).bold + " " + colors.red(data.giftName + "x" + data.num).bold;
-                    cmtBox.insertLine(0,"[系统] ".bold.yellow + text);
+                    cmtBox.insertLine(0,"[投喂] ".bold.yellow + text);
                     if (config.notify[1])
                     {
-                        text = "[系统] " + data.uname + " " + data.action + " " + data.giftName + "x" + data.num;
+                        text = "[投喂] " + data.uname + " " + data.action + " " + data.giftName + "x" + data.num;
                         libnotify.notify(text,notifyConf);
                     }
                     break;
