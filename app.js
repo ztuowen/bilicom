@@ -2,6 +2,7 @@ var app = function(){
     var fs = require('fs');
     var colors = require('colors');
     var libnotify = require('libnotify');
+    var pkginfo = require('./package.json');
 
     var CommentClient = require('./commentclient.js').Client;
     var Bili_live = require('./bili-live.js');
@@ -59,8 +60,8 @@ var app = function(){
 
     function drawHeader(liveid){
         var headerText, headerTextNoTags;
-        headerText = ' {bold}Bilicom{/bold}{white-fg} for ' + liveid + ' ';
-        headerTextNoTags = ' Bili-comment for ' + liveid + ' ';
+        headerText = ' {bold}Bilicom{/bold}{white-fg} '+ pkginfo.version + ' for ' + liveid + ' ';
+        headerTextNoTags = ' Bili-comment '+ pkginfo.version + ' for ' + liveid + ' ';
 
         var header = blessed.text({
             top: 'top',
