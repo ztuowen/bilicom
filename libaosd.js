@@ -33,7 +33,6 @@ var child_process = require('child_process');
 
 var screen=[],l=0;
 var timeout=4000;
-var size=16;
 var position={topleft:['0',1],
     topmid:['1',1],
     topright:['2',1],
@@ -42,18 +41,20 @@ var position={topleft:['0',1],
     botright:['8',-1]
 };
 
-exports.notify = function(msg,loc) {
+exports.notify = function(msg,options) {
     var date = new Date();
     var time= date.getTime();
-    var loc = loc || 'topleft'
+    var options=options || {};
+    options.size = options.size || 16;
+    options.loc = options.loc || 'topleft';
 
     var pos = getempty();
     screen[pos]=time;
     callnotify(msg,{time:timeout,
-        offset:Math.round(pos*size*1.5*position[loc][1])+1,
-        fontsize:size,
+        offset:Math.round(pos*(options.size+1)*1.5*position[options.loc][1])+1,
+        fontsize:options.size,
         color:'white',
-        position:position[loc][0]
+        position:position[options.loc][0]
     });
     function getempty(){
         for (var i=0;i<l;++i)

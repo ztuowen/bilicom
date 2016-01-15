@@ -20,6 +20,9 @@ var app = function(){
     var intervals=[];
     var postag=['topleft','topmid','topright','botleft','botmid','botright'];
     var curpos=0;
+    var notconf={loc:postag[curpos],
+        size:16
+    };
     var footerRight;
 
     var nowclient;
@@ -110,7 +113,8 @@ var app = function(){
             else
                 text += '  {white-fg}{black-bg}' + command[0] + '{/black-bg}{/white-fg} ' + command[2];
         }
-        footerRight.setContent('  {white-fg}{black-bg}q{/black-bg}{/white-fg} 退出'+'  {white-fg}{black-bg}m{/black-bg}{/white-fg} 播放器'+'  {white-fg}{black-bg}p{/black-bg}{/white-fg} '+postag[curpos]+text);
+        footerRight.setContent('  {white-fg}{black-bg}q{/black-bg}{/white-fg} 退出'+'  {white-fg}{black-bg}m{/black-bg}{/white-fg} 播放器'+'  {white-fg}{black-bg}p{/black-bg}{/white-fg} '+notconf.loc+
+                '  {white-fg}{black-bg}k/j{/black-bg}{/white-fg} '+notconf.size+text);
     }
 
     return {
@@ -151,10 +155,18 @@ var app = function(){
                         config.showWelcome[1]= !config.showWelcome[1];
                         break;
                     case 'p':
-                        curpos=(curpos+1)%6;
+                        notconf.loc=postag[curpos=(curpos+1)%6];
                         break;
                     case 'd':
-                        libnotify.notify("[系统] 这只是一个测试",postag[curpos]);
+                        libnotify.notify("[系统] 这只是一个测试",notconf);
+                        break;
+                    case 'k':
+                        if (notconf.size<30)
+                            ++notconf.size;
+                        break;
+                    case 'j':
+                        if (notconf.size>10)
+                            --notconf.size;
                         break;
                     default:
                 }
@@ -258,7 +270,7 @@ var app = function(){
                     if (config.notify[1])
                     {
                         text = "[投喂] " + data.uname + " " + data.action + " " + data.giftName + "x" + data.num;
-                        libnotify.notify(text,postag[curpos]);
+                        libnotify.notify(text,notconf);
                     }
                     break;
                 case "WELCOME":
@@ -271,7 +283,7 @@ var app = function(){
                         if (config.notify[1])
                         {
                             text = "[欢迎] " + "老爷" + data.uname + "进入直播间";
-                            libnotify.notify(text,postag[curpos]);
+                            libnotify.notify(text,notconf);
                         }
                     }
                     break;
@@ -313,7 +325,7 @@ var app = function(){
                         text += msg;
                         text = "[弹幕] " + text;
 
-                        libnotify.notify(text,postag[curpos]);
+                        libnotify.notify(text,notconf);
                     }
                     break;
                 default:
