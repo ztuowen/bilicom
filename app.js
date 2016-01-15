@@ -164,7 +164,7 @@ var app = function(){
                         notconf.loc=postag[curpos=(curpos+1)%6];
                         break;
                     case 'D':
-                        libnotify.notify("[系统] 这只是一个测试",notconf);
+                        libnotify.notify("[测试] 这只是一个测试",notconf);
                         break;
                     case '+':
                         if (notconf.size<30)
