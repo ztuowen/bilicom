@@ -18,7 +18,6 @@
       "request":"2.40.0",
       "xmlreader":"0.2.3",
       "colors": "1.1.0",
-      "libnotify": "1.0.4",
       "blessed": "0.1.81"
   }
 }

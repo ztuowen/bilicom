@@ -1,7 +1,8 @@
 var app = function(){
     var fs = require('fs');
     var colors = require('colors');
-    var libnotify = require('libnotify');
+    var libnotify = require('./libaosd.js');
+    //var libnotify = require('libnotify');
     var pkginfo = require('./package.json');
 
     var CommentClient = require('./commentclient.js').Client;
@@ -20,7 +21,6 @@ var app = function(){
     var footerRight;
 
     var nowclient;
-    var notifyConf = {time:4000}; //4s
 
     var theme = {
         "name": "Becca",
@@ -250,7 +250,7 @@ var app = function(){
                     if (config.notify[1])
                     {
                         text = "[投喂] " + data.uname + " " + data.action + " " + data.giftName + "x" + data.num;
-                        libnotify.notify(text,notifyConf);
+                        libnotify.notify(text);
                     }
                     break;
                 case "WELCOME":
@@ -263,7 +263,7 @@ var app = function(){
                         if (config.notify[1])
                         {
                             text = "[欢迎] " + "老爷" + data.uname + "进入直播间";
-                            libnotify.notify(text,notifyConf);
+                            libnotify.notify(text);
                         }
                     }
                     break;
@@ -305,7 +305,7 @@ var app = function(){
                         text += msg;
                         text = "[弹幕] " + text;
 
-                        libnotify.notify(text,notifyConf);
+                        libnotify.notify(text);
                     }
                     break;
                 default:
