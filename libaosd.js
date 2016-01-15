@@ -51,7 +51,7 @@ exports.notify = function(msg,options) {
     var pos = getempty();
     screen[pos]=time;
     callnotify(msg,{time:timeout,
-        offset:Math.round(pos*(options.size+1)*1.5*position[options.loc][1])+1,
+        offset:Math.round(pos*(options.size+1)*1.6*position[options.loc][1])+1,
         fontsize:options.size,
         color:'white',
         position:position[options.loc][0]
@@ -75,13 +75,14 @@ callnotify = function(msg, options) {
     var args = [],
       options = options || {};
     var EOF = new Buffer(1); EOF[0] = -1;
+    options.font = options.font || "size";
+    options.fontsize = options.fontsize || 16;
     if (options.time) args.push('-u', options.time);
     if (options.offset) args.push('-y', options.offset);
     if (options.align) args.push('-A', options.align);
     if (options.position) args.push('-p', options.position);
     if (options.color) args.push('-R',options.color);
-    if (options.fontsize) args.push('-n', 'Sans '+options.fontsize);
-    else args.push('-n', 'Sans 20');
+    args.push('-n', options.font+' '+options.fontsize);
     args.push('-b','255','-B','black','-x','0');
     var osd = child_process.spawn('aosd_cat',args,{detached:true});
     osd.stdin.write(msg);
