@@ -115,7 +115,7 @@ var app = function(){
         footer.setContent('  {white-fg}{black-bg}q{/black-bg}{/white-fg}'+scrmul('退出')
                 +'  {white-fg}{black-bg}m{/black-bg}{/white-fg}'+scrmul('播放器')
                 +'  {white-fg}{black-bg}p{/black-bg}{/white-fg}'+scrmul(notconf.loc)
-                +'  {white-fg}{black-bg}k/j{/black-bg}{/white-fg}'+scrmul(notconf.size)+text);
+                +'  {white-fg}{black-bg}+/-{/black-bg}{/white-fg}'+scrmul(notconf.size)+text);
         function scrmul(str){
             if (screen.width>90)
                 return ' '+str;
@@ -140,7 +140,7 @@ var app = function(){
 
             //Checking key strokes
             screen.on('keypress', function(ch, key){
-                switch (key.name){
+                switch (ch){
                     case 'q':
                         process.exit(0);
                         break;
@@ -163,14 +163,14 @@ var app = function(){
                     case 'p':
                         notconf.loc=postag[curpos=(curpos+1)%6];
                         break;
-                    case 'd':
+                    case 'D':
                         libnotify.notify("[系统] 这只是一个测试",notconf);
                         break;
-                    case 'k':
+                    case '+':
                         if (notconf.size<30)
                             ++notconf.size;
                         break;
-                    case 'j':
+                    case '-':
                         if (notconf.size>10)
                             --notconf.size;
                         break;
@@ -252,13 +252,8 @@ var app = function(){
             viewNum.setContent("在线人数 " + num.toString());
         });
         server.on('newCommentString', function(data) {
-            //server bili-live: playtime(stime) mode fontsize color timestamp(date) rnd pool bili-userID bili-danmuID message
-            //xml: stime mode fontsize color date pool? bili-userID bili-danmuID
-
             data = JSON.parse(data);
 
-            //data = eval("(" + data + ")");
-            //普通视频 length==2 ; live length==3
             if(!data && !data.roomid) {
                 cmtBox.insertLine(0,JSON.stringify(data,null,2));
                 return cmtBox.insertLine(0,"[弹幕] ".bold.green + "异常数据".red);
