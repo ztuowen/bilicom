@@ -2,7 +2,6 @@ var app = function(){
     var fs = require('fs');
     var colors = require('colors');
     var libnotify = require('./libaosd.js');
-    //var libnotify = require('libnotify');
     var pkginfo = require('./package.json');
 
     var CommentClient = require('./commentclient.js').Client;
@@ -23,7 +22,7 @@ var app = function(){
     var notconf={loc:postag[curpos],
         size:16
     };
-    var footerRight;
+    var footer;
 
     var nowclient;
 
@@ -91,7 +90,7 @@ var app = function(){
         screen.append(viewNum);
     }
     function drawFooter(){
-        footerRight = blessed.text({
+        footer = blessed.text({
             bottom: '0',
             left: '0%',
             width: '100%',
@@ -101,7 +100,7 @@ var app = function(){
             fg: theme.footer.fg
         });
         updateFooter();
-        screen.append(footerRight);
+        screen.append(footer);
     }
 
     function updateFooter(){
@@ -109,12 +108,19 @@ var app = function(){
         for (var c in config) {
             var command = config[c];
             if (command[1])
-                text += '  {white-bg}{black-fg}' + command[0] + '{/black-fg}{/white-bg} ' + command[2];
+                text += '  {white-bg}{black-fg}' + command[0] + '{/black-fg}{/white-bg}' + scrmul(command[2]);
             else
-                text += '  {white-fg}{black-bg}' + command[0] + '{/black-bg}{/white-fg} ' + command[2];
+                text += '  {white-fg}{black-bg}' + command[0] + '{/black-bg}{/white-fg}' + scrmul(command[2]);
         }
-        footerRight.setContent('  {white-fg}{black-bg}q{/black-bg}{/white-fg} 退出'+'  {white-fg}{black-bg}m{/black-bg}{/white-fg} 播放器'+'  {white-fg}{black-bg}p{/black-bg}{/white-fg} '+notconf.loc+
-                '  {white-fg}{black-bg}k/j{/black-bg}{/white-fg} '+notconf.size+text);
+        footer.setContent('  {white-fg}{black-bg}q{/black-bg}{/white-fg}'+scrmul('退出')
+                +'  {white-fg}{black-bg}m{/black-bg}{/white-fg}'+scrmul('播放器')
+                +'  {white-fg}{black-bg}p{/black-bg}{/white-fg}'+scrmul(notconf.loc)
+                +'  {white-fg}{black-bg}k/j{/black-bg}{/white-fg}'+scrmul(notconf.size)+text);
+        function scrmul(str){
+            if (screen.width>90)
+                return ' '+str;
+            return '';
+        }
     }
 
     return {
@@ -192,6 +198,7 @@ var app = function(){
 
             var setupCharts = function() {
                 cmtBox.height = screen.height-2;
+                updateFooter();
             };
 
             screen.on('resize', setupCharts);
