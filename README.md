@@ -8,13 +8,13 @@
 
 1. 同步连接bilibili弹幕服务器
 2. 观看B站直播视频流
-3. 弹幕以notification形式弹出
+3. 弹幕通过aosd在屏幕上显示
 
 ##安装与使用
 
 ###安装
 
-1. 安装所需的软件: nodejs, mpv
+1. 安装所需的软件: nodejs, mpv, libaosd(aosd_cat)
 2. 安装本弹幕助手: `sudo npm install -g bilicom`
 
 ###使用
@@ -25,11 +25,4 @@
 
 ## 已知问题
 
-###弹幕弹出后失去focus
-
-在相应的窗口管理器中设定，不让notification自动获得focus
-
-如，在awesome中，可以在rules下增加
-
-> `{ rule = { class = "Xfce4-notifyd"},`
-> `properties = {focus=false} },`
+无
