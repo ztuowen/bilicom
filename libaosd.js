@@ -31,14 +31,13 @@ var child_process = require('child_process');
  * @api public
  */
 
-var screen=[],l=0;
 var timeout=4000;
-var position={topleft:['0',1],
-    topmid:['1',1],
-    topright:['2',1],
-    botleft:['6',-1],
-    botmid:['7',-1],
-    botright:['8',-1]
+var position={topleft:['0',1,0,[]],
+    topmid:['1',1,0,[]],
+    topright:['2',1,0,[]],
+    botleft:['6',-1,0,[]],
+    botmid:['7',-1,0,[]],
+    botright:['8',-1,0,[]]
 };
 
 exports.notify = function(msg,options) {
@@ -48,27 +47,24 @@ exports.notify = function(msg,options) {
     options.size = options.size || 16;
     options.loc = options.loc || 'topleft';
 
-    var pos = getempty();
-    screen[pos]=time;
+    var pos = getempty(options.loc);
+    position[options.loc][3][pos]=time;
     callnotify(msg,{time:timeout,
         offset:Math.round(pos*(options.size+1)*1.6*position[options.loc][1])+1,
         fontsize:options.size,
         color:'white',
         position:position[options.loc][0]
     });
-    function getempty(){
-        for (var i=0;i<l;++i)
-            if (screen[i]<time-timeout)
-                return i;
-        screen.push(0);
-        l+=1;
-        return l-1;
-    }
-}
 
-clear = function(){
-    screen = [];
-    l=0;
+    // Find the first empty place
+    function getempty(loc){
+        for (var i=0;i<position[loc][2];++i)
+            if (position[loc][3][i]<time-timeout)
+                return i;
+        position[loc][3].push(0);
+        position[loc][2]+=1;
+        return position[loc][2]-1;
+    }
 }
 
 callnotify = function(msg, options) {
