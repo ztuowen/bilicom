@@ -33,19 +33,27 @@ var child_process = require('child_process');
 
 var screen=[],l=0;
 var timeout=4000;
-var size=20;
+var size=16;
+var position={topleft:['0',1],
+    topmid:['1',1],
+    topright:['2',1],
+    botleft:['6',-1],
+    botmid:['7',-1],
+    botright:['8',-1]
+};
 
-exports.notify = function(msg) {
+exports.notify = function(msg,loc) {
     var date = new Date();
     var time= date.getTime();
+    var loc = loc || 'topleft'
 
     var pos = getempty();
     screen[pos]=time;
     callnotify(msg,{time:timeout,
-        offset:Math.round(pos*size*1.5)+1,
+        offset:Math.round(pos*size*1.5*position[loc][1])+1,
         fontsize:size,
         color:'white',
-        position:'0'
+        position:position[loc][0]
     });
     function getempty(){
         for (var i=0;i<l;++i)
@@ -73,7 +81,7 @@ callnotify = function(msg, options) {
     if (options.color) args.push('-R',options.color);
     if (options.fontsize) args.push('-n', 'Sans '+options.fontsize);
     else args.push('-n', 'Sans 20');
-    args.push('-b','255','-B','black');
+    args.push('-b','255','-B','black','-x','0');
     var osd = child_process.spawn('aosd_cat',args,{detached:true});
     osd.stdin.write(msg);
     osd.stdin.end();
