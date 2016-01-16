@@ -27,7 +27,7 @@
 命令行参数：
 
 * `-c`或`--cookie` <string> : 设置cookie
-* `-C`或`--cookie-file` <filename> : 设置cookie文件名(默认`cookie`)
+* `-C`或`--cookie-file` <filename> : 设置cookie文件名
 * `-l`或`--log` : 保存弹幕
 * `-d`或`--dir` <dirname> : 设置弹幕保存目录
 
@@ -55,8 +55,8 @@ D	|	（发送测试弹幕）
 3. 输入cookie保存密码
 4. 回车键进入弹幕发送模式
 5. 回车发送弹幕（空弹幕不会发送）
-6. 之后可以直接使用`bilicom <直播间号>`运行程序发弹幕
-7. **如果修改了cookie-file名字需要使用-C <filename>指定文件**
+7. **如果想要把cookie保存到cookie-file需要使用-C <filename>指定文件**
+8. 保存后只需指定cookie-file就可以发弹幕了
 
 ***由于一些新加的功能，目前以下功能只能在linux下使用***
 

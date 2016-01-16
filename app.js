@@ -186,15 +186,14 @@ var app = function(){
                 logStream.write(new Buffer(JSON.stringify(liveinfo)));
                 logStream.write(new Buffer([0x00,0x00]));
             }
-            var fname = "cookie";
+            var fname = null;
+            if (argv.C) fname = argv.C;
             if (argv.c)
             {
                     comsend=require('./commentsend.js').comsend();
-                    if (argv.C) fname = argv.C
                     comsend.initUnenc(fname,argv.c,liveid,initBlessed);
             }
             else {
-                if (argv.C) fname = argv.C;
                 var st;
                 try{
                     st=fs.statSync(fname);
@@ -213,6 +212,8 @@ var app = function(){
     }
     function initBlessed()
     {
+        // Clear all stdin listeners
+        process.stdin.removeAllListeners();
     
         // Create a screen object
         screen = blessed.screen({

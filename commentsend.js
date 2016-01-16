@@ -11,19 +11,20 @@ exports.comsend = function (){
         initUnenc: function(fname,ck,roomid,callback){
             cookie = ck;
             rid = roomid;
+            if (fname)
+            {
+                const rl = readline.createInterface({
+                    input: process.stdin,
+                    output: process.stdout
+                });
 
-            const rl = readline.createInterface({
-                input: process.stdin,
-                output: process.stdout
-            });
-
-            rl.question('Passwd for the Cookie store? ', (passwd) => {
-                rl.close();
-                var enc=crypto.AES.encrypt(ck,passwd).toString();
-                fs.writeFile(fname,enc);
-                process.stdin.removeAllListeners();
-                callback();
-            });
+                rl.question('Passwd for the Cookie store? ', (passwd) => {
+                    rl.close();
+                    var enc=crypto.AES.encrypt(ck,passwd).toString();
+                    fs.writeFile(fname,enc);
+                });
+            }
+            callback();
         },
         init: function(fname,roomid,callback){
             rid = roomid;
@@ -39,7 +40,6 @@ exports.comsend = function (){
                 fs.readFile(fname,(err,data) =>{
                     var dec = crypto.AES.decrypt(data.toString(),passwd);
                     cookie = dec.toString(crypto.enc.Utf8);
-                    process.stdin.removeAllListeners();
                     callback();
                 });
             });
