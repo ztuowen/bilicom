@@ -10,7 +10,6 @@ exports.comsend = function (){
             rnd=Math.round((new Date).getTime()/1000);
         },
         send: function(msg){
-            while (!rnd);
             var form={color:16777215,
             fontsize:25,
             mode:1,
