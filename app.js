@@ -13,6 +13,7 @@ var app = function(){
         "notify":['n',false,'弹幕提示'],
     };
     var child_process = require('child_process');
+    var comsend=null;
 
     var blessed = require('blessed');
     var screen,cmtBox,liveid,viewNum;
@@ -23,6 +24,7 @@ var app = function(){
         size:16
     };
     var footer;
+    var inbox;
 
     var nowclient;
 
@@ -90,6 +92,22 @@ var app = function(){
         screen.append(viewNum);
     }
     function drawFooter(){
+        inbox = blessed.textarea({
+            bottom: 1,
+            height: 1,
+            left: '0%',
+            width: '100%',
+            inputOnFocus: true,
+            style: {          
+                fg: '#787878',
+                bg: '#454545',  
+
+                focus: {        
+                    fg: '#f6f6f6',
+                    bg: '#353535' 
+                }
+            }
+        })
         footer = blessed.text({
             bottom: '0',
             left: '0%',
@@ -99,8 +117,17 @@ var app = function(){
             content: '',
             fg: theme.footer.fg
         });
+        inbox.key('enter',function(ch,key){
+            var message = this.getValue().replace(/(\r\n|\n|\r)/gm,"");
+            this.clearValue();
+            if (comsend && message.length > 0)
+                comsend.send(message);
+            screen.rewindFocus();
+            screen.render();
+        });
         updateFooter();
         screen.append(footer);
+        screen.append(inbox);
     }
 
     function updateFooter(){
@@ -128,7 +155,14 @@ var app = function(){
             // parse cmdline
             var liveid;
             if (process.argv.length>2)
+            {
                 liveid=process.argv[2];
+                if (process.argv.length>3)
+                {
+                    comsend=require('./commentsend.js').comsend();
+                    comsend.init(process.argv[3],liveid);
+                }
+            }
             else 
                 process.exit(0);
 
@@ -178,6 +212,15 @@ var app = function(){
                 }
                 updateFooter();
             });
+            screen.key('enter',function(ch,key){
+                if (comsend)
+                    inbox.focus();
+                else
+                {
+                    inbox.content="如要发送弹幕，请使用'bilicom <直播间号> <cookie>'运行";
+                    screen.render();
+                }
+            });
 
             drawHeader(liveid);
             drawFooter();
@@ -186,7 +229,7 @@ var app = function(){
                 top: 1,
                 left: 'left',
                 width: '100%',
-                height: screen.height-2,
+                height: screen.height-3,
                 keys: true,
                 mouse: true,
                 scrollable: true,
@@ -197,7 +240,7 @@ var app = function(){
             screen.render();
 
             var setupCharts = function() {
-                cmtBox.height = screen.height-2;
+                cmtBox.height = screen.height-3;
                 updateFooter();
             };
 
