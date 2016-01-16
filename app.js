@@ -1,5 +1,6 @@
 var app = function(){
     var fs = require('fs');
+    var logStream;
     var colors = require('colors');
     var libnotify = require('./libaosd.js');
     var pkginfo = require('./package.json');
@@ -173,6 +174,18 @@ var app = function(){
                 cwd=argv.d;
             else
                 cwd=process.cwd();
+            var wOption = {
+                flags: 'a',
+                encoding: null,
+                mode: '0666'
+            };
+            if (argv.l)
+            {
+                logStream = fs.createWriteStream(cwd+'/'+liveid+'_'+new Date().getTime()+'.source',wOption);
+                var liveinfo = {liveid: liveid};
+                logStream.write(new Buffer(JSON.stringify(liveinfo)));
+                logStream.write(new Buffer([0x00,0x00]));
+            }
             var fname = "cookie";
             if (argv.c)
             {
@@ -321,9 +334,18 @@ var app = function(){
         });
         server.on('login_success', function(num) {
             viewNum.setContent("在线人数 " + num.toString());
+            if(fileWriteStream){
+                logStream.write(new Buffer(JSON.stringify({action:"watcherNum",num:num})));
+                logStream.write(new Buffer([0x00]));
+            }
         });
         server.on('newCommentString', function(data) {
             data = JSON.parse(data);
+            //save Danmu Info
+            if(fileWriteStream){
+                logStream.write(new Buffer(JSON.stringify(data)));
+                logStream.write(new Buffer([0x00]));
+            }
 
             if(!data && !data.roomid) {
                 cmtBox.insertLine(0,JSON.stringify(data,null,2));
