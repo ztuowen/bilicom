@@ -1,13 +1,49 @@
+var crypto = require('crypto-js');
+var readline = require('readline');
+var fs = require('fs');
+
 exports.comsend = function (){
     var cookie = "";
     var request = require('request').defaults({jar: true});
     var rnd;
     var rid;
     return {
-        init: function(ck,roomid){
+        initUnenc: function(fname,ck,roomid,callback){
             cookie = ck;
             rid = roomid;
+
+            const rl = readline.createInterface({
+                input: process.stdin,
+                output: process.stdout
+            });
+
+            rl.question('Passwd for the Cookie store? ', (passwd) => {
+                rl.close();
+                var enc=crypto.AES.encrypt(ck,passwd).toString();
+                fs.writeFile(fname,enc);
+                process.stdin.removeAllListeners();
+                callback();
+            });
+        },
+        init: function(fname,roomid,callback){
+            rid = roomid;
             rnd=Math.round((new Date).getTime()/1000);
+            
+            const rl = readline.createInterface({
+                input: process.stdin,
+                output: process.stdout
+            });
+
+            rl.question('Passwd for the Cookie store? ', (passwd) => {
+                rl.close();
+                fs.readFile(fname,(err,data) =>{
+                    var dec = crypto.AES.decrypt(data.toString(),passwd);
+                    cookie = dec.toString(crypto.enc.Utf8);
+                    process.stdin.removeAllListeners();
+                    callback();
+                });
+            });
+
         },
         send: function(msg){
             while (!rnd);

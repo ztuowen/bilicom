@@ -6,6 +6,7 @@ var app = function(){
 
     var CommentClient = require('./commentclient.js').Client;
     var Bili_live = require('./bili-live.js');
+    var liveid;
     var config={
         "showTime":['t',false,'发射时间'],
         "showUserName":['u',true,'弹幕发送者'],
@@ -23,6 +24,7 @@ var app = function(){
     var notconf={loc:postag[curpos],
         size:16
     };
+    var cwd;
     var footer;
     var inbox;
 
@@ -153,124 +155,150 @@ var app = function(){
     return {
         init: function() {
             // parse cmdline
-            var liveid;
-            if (process.argv.length>2)
+            var argv = require('yargs')
+                .usage('usage: $0 [liveid] <options>')
+                .demand(1)
+                .alias('c', 'cookie')
+                .describe('c', 'use cookie string')
+                .alias('C', 'cookie-file')
+                .describe('C', 'use cookie file(load/store,encrypted)')
+                .alias('d','dir')
+                .describe('d', 'log file dir,default to current dir')
+                .boolean('l')
+                .describe('l','enable logging')
+                .help('help')
+                .argv;
+            liveid=argv._[0];
+            if (argv.d)
+                cwd=argv.d;
+            else
+                cwd=process.cwd();
+            var fname = "cookie";
+            if (argv.c)
             {
-                liveid=process.argv[2];
-                if (process.argv.length>3)
+                    comsend=require('./commentsend.js').comsend();
+                    if (argv.C) fname = argv.C
+                    comsend.initUnenc(fname,argv.c,liveid,initBlessed);
+            }
+            else {
+                if (argv.C) fname = argv.C;
+                if (fs.statSync(fname).isFile())
                 {
                     comsend=require('./commentsend.js').comsend();
-                    comsend.init(process.argv[3],liveid);
+                    comsend.init(fname,liveid,initBlessed);
                 }
-            }
-            else 
-                process.exit(0);
-
-            // Create a screen object
-            screen = blessed.screen({
-                terminal: 'xterm-256color',
-                fullUnicode:true
-            });
-
-            //Checking key strokes
-            screen.on('keypress', function(ch, key){
-                switch (ch){
-                    case 'q':
-                        process.exit(0);
-                        break;
-                    case 'm':
-                        cmtBox.insertLine(0,"正在启动播放器".red);
-                        runmpv();
-                        break;
-                    case 'n':
-                        config.notify[1] = !config.notify[1];
-                        break;
-                    case 't':
-                        config.showTime[1] = !config.showTime[1];
-                        break;
-                    case 'u':
-                        config.showUserName[1] = !config.showUserName[1];
-                        break;
-                    case 'w':
-                        config.showWelcome[1]= !config.showWelcome[1];
-                        break;
-                    case 'p':
-                        notconf.loc=postag[curpos=(curpos+1)%6];
-                        break;
-                    case 'D':
-                        libnotify.notify("[测试] 这只是一个测试",notconf);
-                        break;
-                    case '+':
-                        if (notconf.size<30)
-                            ++notconf.size;
-                        break;
-                    case '-':
-                        if (notconf.size>10)
-                            --notconf.size;
-                        break;
-                    default:
-                }
-                updateFooter();
-            });
-            screen.key('enter',function(ch,key){
-                if (comsend)
-                    inbox.focus();
                 else
-                {
-                    inbox.content="如要发送弹幕，请使用'bilicom <直播间号> <cookie>'运行";
-                    screen.render();
-                }
-            });
+                    initBlessed();
+            }
+        }
+    }
+    function initBlessed()
+    {
+    
+        // Create a screen object
+        screen = blessed.screen({
+            terminal: 'xterm-256color',
+            fullUnicode:true
+        });
 
-            drawHeader(liveid);
-            drawFooter();
-
-            cmtBox = blessed.box({
-                top: 1,
-                left: 'left',
-                width: '100%',
-                height: screen.height-3,
-                keys: true,
-                mouse: true,
-                scrollable: true,
-                fg: theme.table.fg
-            });
-            screen.append(cmtBox);
-
-            screen.render();
-
-            var setupCharts = function() {
-                cmtBox.height = screen.height-3;
-                updateFooter();
-            };
-
-            screen.on('resize', setupCharts);
-            intervals.push(setInterval(draw, 100));
-
-            function draw()
+        //Checking key strokes
+        screen.on('keypress', function(ch, key){
+            switch (ch){
+                case 'q':
+                    process.exit(0);
+                    break;
+                case 'm':
+                    cmtBox.insertLine(0,"正在启动播放器".red);
+                    runmpv();
+                    break;
+                case 'n':
+                    config.notify[1] = !config.notify[1];
+                    break;
+                case 't':
+                    config.showTime[1] = !config.showTime[1];
+                    break;
+                case 'u':
+                    config.showUserName[1] = !config.showUserName[1];
+                    break;
+                case 'w':
+                    config.showWelcome[1]= !config.showWelcome[1];
+                    break;
+                case 'p':
+                    notconf.loc=postag[curpos=(curpos+1)%6];
+                    break;
+                case 'D':
+                    libnotify.notify("[测试] 这只是一个测试",notconf);
+                    break;
+                case '+':
+                    if (notconf.size<30)
+                        ++notconf.size;
+                    break;
+                case '-':
+                    if (notconf.size>10)
+                        --notconf.size;
+                    break;
+                default:
+            }
+            updateFooter();
+        });
+        screen.key('enter',function(ch,key){
+            if (comsend)
+                inbox.focus();
+            else
             {
+                inbox.content="如要发送弹幕，请使用'bilicom <直播间号> <cookie>'运行";
                 screen.render();
             }
-            /**
-             * Init Chat Client
-             */
-            (function(chat_id){
-                cmtBox.insertLine(0,("=========直播间信息=========\nchat_id : " + chat_id.toString() + "\n============================").cyan);
+        });
 
-                nowclient=connectCommentServer(chat_id);
-            }(liveid));
-            /**
-             * Open media player
-             */
-            function runmpv(){
-                Bili_live.getLiveUrls(liveid, function(err,url){
-                    if (err==null) {
-                        //console.log(url);
-                        var child = child_process.spawn('mpv',[url],{detached:true, stdio: [ 'ignore', 'ignore', 'ignore' ]});
-                        child.unref();
-                    }
-                });
-            }
+        drawHeader(liveid);
+        drawFooter();
+
+        cmtBox = blessed.box({
+            top: 1,
+            left: 'left',
+            width: '100%',
+            height: screen.height-3,
+            keys: true,
+            mouse: true,
+            scrollable: true,
+            fg: theme.table.fg
+        });
+        screen.append(cmtBox);
+
+        screen.render();
+
+        var setupCharts = function() {
+            cmtBox.height = screen.height-3;
+            updateFooter();
+        };
+
+        screen.on('resize', setupCharts);
+        intervals.push(setInterval(draw, 100));
+
+        function draw()
+        {
+            screen.render();
+        }
+        /**
+         * Init Chat Client
+         */
+        (function(chat_id){
+            cmtBox.insertLine(0,("=========直播间信息=========\nchat_id : " + chat_id.toString() + "\n============================").cyan);
+
+            nowclient=connectCommentServer(chat_id);
+        }(liveid));
+        /**
+         * Open media player
+         */
+        function runmpv(){
+            Bili_live.getLiveUrls(liveid, function(err,url){
+                if (err==null) {
+                    //console.log(url);
+                    var child = child_process.spawn('mpv',[url],{detached:true, stdio: [ 'ignore', 'ignore', 'ignore' ]});
+                    child.unref();
+                }
+            });
         }
     };
 
