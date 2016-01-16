@@ -18,6 +18,7 @@
       "request":"2.40.0",
       "xmlreader":"0.2.3",
       "colors": "1.1.0",
-      "blessed": "0.1.81"
+      "blessed": "0.1.81",
+      "ursa": "0.9.1"
   }
 }
