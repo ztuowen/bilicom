@@ -1,35 +1,5 @@
-// libnotify - Copyright Mitko Kostov <mitko.kostov@gmail.com> (MIT Licensed)
-// fork of visionmedia's node-growl modified to work with libnotify on linux
-
-/**
- * Module dependencies.
- */
 
 var child_process = require('child_process');
-
-/**
- * Send libnotify notification _msg_ with _options_.
- *
- * Options:
- *
- *  - title   Notification title
- *  - time    Set the expiration time
- *  - image
- *    - path to an image sets -i ( you can also use stock icons )
- *
- * Examples:
- *
- *   growl.notify('New email')
- *   growl.notify('5 new emails', { title: 'Thunderbird' })
- *   growl.notify('Email sent', function(){
- *     // ... notification sent
- *   })
- *
- * @param {string} msg
- * @param {object} options
- * @param {function} callback
- * @api public
- */
 
 var timeout=4000;
 var position={topleft:['0',1,0,[]],
