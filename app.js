@@ -334,7 +334,7 @@ var app = function(){
         });
         server.on('login_success', function(num) {
             viewNum.setContent("在线人数 " + num.toString());
-            if(fileWriteStream){
+            if(logStream){
                 logStream.write(new Buffer(JSON.stringify({action:"watcherNum",num:num})));
                 logStream.write(new Buffer([0x00]));
             }
@@ -342,7 +342,7 @@ var app = function(){
         server.on('newCommentString', function(data) {
             data = JSON.parse(data);
             //save Danmu Info
-            if(fileWriteStream){
+            if(logStream){
                 logStream.write(new Buffer(JSON.stringify(data)));
                 logStream.write(new Buffer([0x00]));
             }
