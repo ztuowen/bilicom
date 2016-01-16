@@ -7,10 +7,7 @@ exports.comsend = function (){
         init: function(ck,roomid){
             cookie = ck;
             rid = roomid;
-            request({url:'http://live.bilibili.com/'+rid,
-            'Cookie':cookie},function (err,response,body){
-                rnd=new Date(response.headers.date).getTime()/1000;
-            });
+            rnd=Math.round((new Date).getTime()/1000);
         },
         send: function(msg){
             while (!rnd);
