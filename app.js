@@ -195,13 +195,19 @@ var app = function(){
             }
             else {
                 if (argv.C) fname = argv.C;
-                if (fs.statSync(fname).isFile())
-                {
-                    comsend=require('./commentsend.js').comsend();
-                    comsend.init(fname,liveid,initBlessed);
-                }
-                else
+                var st;
+                try{
+                    st=fs.statSync(fname);
+                    if (st.isFile())
+                    {
+                        comsend=require('./commentsend.js').comsend();
+                        comsend.init(fname,liveid,initBlessed);
+                    }
+                    else
+                        initBlessed();
+                } catch (e) {
                     initBlessed();
+                }
             }
         }
     }
