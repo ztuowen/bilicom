@@ -163,10 +163,10 @@ var app = function(){
                 .describe('c', 'use cookie string')
                 .alias('C', 'cookie-file')
                 .describe('C', 'use cookie file(load/store,encrypted)')
+                .boolean('l','log')
+                .describe('l','enable logging')
                 .alias('d','dir')
                 .describe('d', 'log file dir,default to current dir')
-                .boolean('l')
-                .describe('l','enable logging')
                 .help('help')
                 .argv;
             liveid=argv._[0];
@@ -259,7 +259,7 @@ var app = function(){
                 inbox.focus();
             else
             {
-                inbox.content="如要发送弹幕，请使用'bilicom <直播间号> <cookie>'运行";
+                inbox.content="如要发送弹幕，请参考'bilicom --help'";
                 screen.render();
             }
         });
