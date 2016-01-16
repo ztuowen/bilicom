@@ -20,7 +20,7 @@ exports.notify = function(msg,options) {
     var pos = getempty(options.loc);
     position[options.loc][3][pos]=time;
     callnotify(msg,{time:timeout,
-        offset:Math.round(pos*(options.size+1)*1.6*position[options.loc][1])+1,
+        offset:Math.round(pos*(options.size+1)*1.6*position[options.loc][1])+'',
         fontsize:options.size,
         color:'white',
         position:position[options.loc][0]
