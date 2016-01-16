@@ -65,11 +65,11 @@ D	|	（发送测试弹幕）
 
 ## 没图说个XX
 
-### 发送弹幕时屏幕提示
+### 弹幕机界面
 
-![image](https://cloud.githubusercontent.com/assets/6838440/12362086/d81ec82e-bb7e-11e5-8e36-f61dbe1b057b.png)
+![image](https://cloud.githubusercontent.com/assets/6838440/12373868/fb9781c4-bc46-11e5-9a6c-de3c4ecb2692.png)
 
-### 多个弹幕的叠加效果&弹幕机界面截图
+### 多个弹幕的叠加效果
 
 ![image](https://cloud.githubusercontent.com/assets/6838440/12362141/0bb6d866-bb7f-11e5-9ceb-f0ec07d99280.png)
 
