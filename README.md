@@ -67,7 +67,7 @@ D	|	（发送测试弹幕）
 
 ### 弹幕机界面
 
-![image](https://cloud.githubusercontent.com/assets/6838440/12380496/7a9eaaca-bd31-11e5-96e8-85a128e11a93.png)
+![image](https://cloud.githubusercontent.com/assets/6838440/12380470/09ffb494-bd31-11e5-8d4d-78a9624799aa.png)
 
 ### 多个弹幕的叠加效果
 
@@ -75,4 +75,4 @@ D	|	（发送测试弹幕）
 
 ### 使用弹幕机观看直播
 
-![image](https://cloud.githubusercontent.com/assets/6838440/12380496/7a9eaaca-bd31-11e5-96e8-85a128e11a93.png)
+![image](https://cloud.githubusercontent.com/assets/6838440/12380533/50ecedc6-bd32-11e5-8982-a329838650b6.png)
