@@ -67,13 +67,12 @@ D	|	（发送测试弹幕）
 
 ### 弹幕机界面
 
-![image](https://cloud.githubusercontent.com/assets/6838440/12373868/fb9781c4-bc46-11e5-9a6c-de3c4ecb2692.png)
+![image](https://cloud.githubusercontent.com/assets/6838440/12380496/7a9eaaca-bd31-11e5-96e8-85a128e11a93.png)
 
 ### 多个弹幕的叠加效果
 
-![image](https://cloud.githubusercontent.com/assets/6838440/12362141/0bb6d866-bb7f-11e5-9ceb-f0ec07d99280.png)
+![image](https://cloud.githubusercontent.com/assets/6838440/12380496/7a9eaaca-bd31-11e5-96e8-85a128e11a93.png)
 
 ### 使用弹幕机观看直播
 
-![image](https://cloud.githubusercontent.com/assets/6838440/12362229/68640c64-bb7f-11e5-8c8c-54f6d0085a7a.png)
-
+![image](https://cloud.githubusercontent.com/assets/6838440/12380496/7a9eaaca-bd31-11e5-96e8-85a128e11a93.png)

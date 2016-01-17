@@ -20,7 +20,7 @@ exports.notify = function(msg,options) {
     var pos = getempty(options.loc);
     position[options.loc][3][pos]=time;
     callnotify(msg,{time:timeout,
-        offset:Math.round(pos*(options.size+1)*1.6*position[options.loc][1])+'',
+        offset:Math.round(pos*(options.size+1)*1.7*position[options.loc][1])+'',
         fontsize:options.size,
         color:'white',
         position:position[options.loc][0]
@@ -41,7 +41,7 @@ callnotify = function(msg, options) {
     var args = [],
       options = options || {};
     var EOF = new Buffer(1); EOF[0] = -1;
-    options.font = options.font || "size";
+    options.font = options.font || "Source han sans";
     options.fontsize = options.fontsize || 16;
     if (options.time) args.push('-u', options.time);
     if (options.offset) args.push('-y', options.offset);

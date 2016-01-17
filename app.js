@@ -228,7 +228,7 @@ var app = function(){
                     process.exit(0);
                     break;
                 case 'm':
-                    cmtBox.insertLine(0,"正在启动播放器".red);
+                    cmtBox.insertLine(0,"[系统] ".bold.red+"正在启动播放器".bold);
                     runmpv();
                     break;
                 case 'n':
@@ -331,13 +331,14 @@ var app = function(){
         var server= new CommentClient();
 
         server.on('server_error', function(error) {
-            cmtBox.insertLine(0,("服务器发生错误:" + error).red);
+            cmtBox.insertLine(0,"[系统] ".bold.red + ("服务器发生错误:" + error).bold);
         });
         server.on('close', function() {
-            cmtBox.insertLine(0,"连接已中断".red);
+            cmtBox.insertLine(0,"[系统] ".bold.red + "连接已中断,正在重新建立链接".bold);
+            nowclient = nowclient.connect(liveid);
         });
         server.on('error', function(error) {
-            cmtBox.insertLine(0,("发生错误:" + error).red);
+            cmtBox.insertLine(0,"[系统] ".bold.red + ("发生错误:" + error).bold);
         });
         server.on('login_success', function(num) {
             viewNum.setContent("在线人数 " + num.toString());
