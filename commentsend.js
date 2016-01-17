@@ -1,13 +1,20 @@
+/**
+ * Using cookie to send comments to Bilibili
+ **/
+
 var crypto = require('crypto-js');
 var readline = require('readline');
 var fs = require('fs');
 
+// TODO needs a better way of defining a class than using closure
 exports.comsend = function (){
     var cookie = "";
     var request = require('request').defaults({jar: true});
     var rnd;
     var rid;
     return {
+        // Init with non-encrypted cookie
+        // Will encrypt&store cookie to cookie-file if fname is given
         initUnenc: function(fname,ck,roomid,callback){
             cookie = ck;
             rid = roomid;
@@ -26,6 +33,7 @@ exports.comsend = function (){
             }
             callback();
         },
+        // Init with a cookie file
         init: function(fname,roomid,callback){
             rid = roomid;
             rnd=Math.round((new Date).getTime()/1000);
@@ -45,6 +53,7 @@ exports.comsend = function (){
             });
 
         },
+        // Send messages to bilibili comments server
         send: function(msg){
             while (!rnd);
             var form={color:16777215,

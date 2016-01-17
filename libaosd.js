@@ -1,7 +1,13 @@
+/**
+ * A simple notification library using aosd_cat
+ **/
 
 var child_process = require('child_process');
 
+// Timeout of notification to be 4s
 var timeout=4000;
+
+// Each position has its own queue in case of conflict
 var position={topleft:['0',1,0,[]],
     topmid:['1',1,0,[]],
     topright:['2',1,0,[]],
@@ -10,6 +16,8 @@ var position={topleft:['0',1,0,[]],
     botright:['8',-1,0,[]]
 };
 
+// Wraper for raw aosd_cat
+// Input: msg & options@{size,loc}
 exports.notify = function(msg,options) {
     var date = new Date();
     var time= date.getTime();
@@ -37,6 +45,8 @@ exports.notify = function(msg,options) {
     }
 }
 
+// Raw aosd_cat options
+// Input: msg & options
 callnotify = function(msg, options) {
     var args = [],
       options = options || {};

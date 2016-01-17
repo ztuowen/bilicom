@@ -30,7 +30,8 @@ var app = function(){
     var inbox;
 
     var nowclient;
-
+    // The theme definition is taken from htop
+    // TODO need to adapt it to this program
     var theme = {
         "name": "Becca",
         "author": "James Hall",
