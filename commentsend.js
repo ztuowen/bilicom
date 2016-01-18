@@ -128,6 +128,7 @@ exports.login = function (){
                         try{
                             captview.kill();
                         }catch(e){}
+                        fs.unlink(captname);
 
                         captcha = answer;
                         rl.close();
