@@ -72,7 +72,7 @@ var app = function(){
     function drawHeader(liveid){
         var headerText, headerTextNoTags;
         headerText = ' {bold}Bilicom{/bold}{white-fg} '+ pkginfo.version + ' for ' + liveid + ' ';
-        headerTextNoTags = ' Bili-comment '+ pkginfo.version + ' for ' + liveid + ' ';
+        headerTextNoTags = ' Bilicom '+ pkginfo.version + ' for ' + liveid + ' ';
 
         var header = blessed.text({
             top: 'top',
@@ -242,7 +242,6 @@ var app = function(){
                     process.exit(0);
                     break;
                 case 'm':
-                    cmtBox.insertLine(0,"[系统] ".bold.red+"正在启动播放器".bold);
                     runmpv();
                     break;
                 case 'n':
@@ -333,8 +332,17 @@ var app = function(){
         function runmpv(){
             Bili_live.getLiveUrls(liveid, function(err,url){
                 if (err==null) {
-                    var child = child_process.spawn('mpv',[url],{detached:true, stdio: [ 'ignore', 'ignore', 'ignore' ]});
-                    child.unref();
+                    var child = child_process.spawn('mpv',['-v'],{detached:true,stdio: [ 'ignore', 'ignore', 'ignore' ]});
+                    child.on('error',function(){
+                        cmtBox.insertLine(0,"[系统] ".red.bold+"mpv没有找到，请验证mpv安装是否成功".bold);
+                    });
+                    child.on('close',function(code){
+                        if (code)
+                            return;
+                        cmtBox.insertLine(0,"[系统] ".bold.red+"正在启动播放器".bold);
+                        var child = child_process.spawn('mpv',[url],{detached:true, stdio: [ 'ignore', 'ignore', 'ignore' ]});
+                        child.unref();
+                    });
                 }
             });
         }
