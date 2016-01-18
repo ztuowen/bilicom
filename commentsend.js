@@ -3,7 +3,6 @@
  **/
 
 var crypto = require('crypto-js');
-var readline = require('readline');
 var fs = require('fs');
 var read = require('read');
 var NodeRSA = require('node-rsa');
@@ -25,7 +24,7 @@ exports.comsend = function (){
             rid = roomid;
             if (fname)
             {
-                read({prompt:'设置cookie保存文件的密码? ',silent:true}, function (err,passwd) {
+                read({prompt:'设置cookie保存文件的密码? ',silent:true,replace:'*'}, function (err,passwd) {
                     var enc=crypto.AES.encrypt(ck,passwd).toString();
                     fs.writeFile(fname,enc);
                     callback();
@@ -39,7 +38,7 @@ exports.comsend = function (){
             rid = roomid;
             rnd=Math.round((new Date).getTime()/1000);
             
-            read({prompt:'请输入cookie保存文件的密码? ',silent:true}, function (err,passwd) {
+            read({prompt:'请输入cookie保存文件的密码? ',silent:true,replace:'*'}, function (err,passwd) {
                 fs.readFile(fname,function (err,data) {
                     var dec = crypto.AES.decrypt(data.toString(),passwd);
                     cookie = dec.toString(crypto.enc.Utf8);
@@ -89,12 +88,8 @@ exports.login = function (){
                     }},getLoginKey).pipe(fs.createWriteStream(captname));
             }
             function getLoginKey(err,response,body) {
-                const rl = readline.createInterface({
-                      input: process.stdin,
-                        output: process.stdout
-                });
                 if (!uname)
-                    rl.question('用户名? ', function (answer) {
+                    read({prompt:'用户名? '}, function (err,answer) {
                         rl.close();
                         uname = answer;
                         readPasswd();
@@ -103,7 +98,7 @@ exports.login = function (){
                     readPasswd();
                 function readPasswd() {
                     if (!passwd)
-                        read({prompt:'密码? ',silent:true},function (err,answer) {
+                        read({prompt:'密码? ',silent:true,replace:'*'},function (err,answer) {
                             passwd = answer;
                             readCaptcha();
                         });
@@ -112,15 +107,11 @@ exports.login = function (){
                 }
                 function readCaptcha() {
                     var captview = child_process.spawn(picexec,[captname]);
-                    const rl = readline.createInterface({
-                        input: process.stdin,
-                        output: process.stdout
-                    });
 
                     captview.on('error',function(){
                         console.log("使用"+picexec+"打开验证码失败，请手动打开"+captname+"查看");
                     });
-                    rl.question('验证码? ',function (answer) {
+                    read({prompt:'验证码? '},function (err,answer) {
                         try{
                             captview.kill();
                         }catch(e){}

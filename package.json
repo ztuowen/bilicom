@@ -1,6 +1,6 @@
 {
   "name": "bilicom",
-  "version": "3.6.1",
+  "version": "3.6.2",
   "description":"Bilibili 直播弹幕助手",
   "bin": {
       "bilicom": "./bin/bilicom.js"
