@@ -20,6 +20,8 @@
 1. 安装所需的软件: nodejs, mpv, [libaosd(aosd_cat)](https://github.com/mkoskar/libaosd-xinerama)
 2. 安装本弹幕助手: `sudo npm install -g bilicom`
 
+[***如何安装libaosd***](https://github.com/ztuowen/bilicom/issues/2)
+
 ### 使用
 
 安装完成后运行`bilicom <直播间id>`
