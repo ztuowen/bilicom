@@ -16,6 +16,7 @@ exports.comsend = function (){
         // Init with non-encrypted cookie
         // Will encrypt&store cookie to cookie-file if fname is given
         initUnenc: function(fname,ck,roomid,callback){
+            rnd=Math.round((new Date).getTime()/1000);
             cookie = ck;
             rid = roomid;
             if (fname)
@@ -57,7 +58,6 @@ exports.comsend = function (){
         },
         // Send messages to bilibili comments server
         send: function(msg){
-            while (!rnd);
             var form={color:16777215,
             fontsize:25,
             mode:1,
