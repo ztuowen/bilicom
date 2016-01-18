@@ -1,6 +1,6 @@
 {
   "name": "bilicom",
-  "version": "3.4.3",
+  "version": "3.5.0",
   "description":"Bilibili 直播弹幕助手",
   "bin": {
       "bilicom": "./bin/bilicom.js"
@@ -21,6 +21,7 @@
       "blessed": "0.1.81",
       "yargs": "3.32.0",
       "crypto-js": "3.1.6",
-      "node-rsa": "0.2.30" 
+      "node-rsa": "0.2.30",
+      "read": "1.0.7"
   }
 }
