@@ -118,7 +118,7 @@ exports.login = function (){
                     });
 
                     captview.on('error',function(){
-                        console.log("使用"+picexec+"打开验证码失败，请手动打开当前目录下"+captname+"查看");
+                        console.log("使用"+picexec+"打开验证码失败，请手动打开"+captname+"查看");
                     });
                     rl.question('验证码? ', (answer) => {
                         try{
