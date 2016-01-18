@@ -227,7 +227,9 @@ var app = function(){
     function initBlessed()
     {
         // Clear all stdin listeners
-        process.stdin.removeAllListeners();
+        process.stdin.removeAllListeners('keypress');
+        if (!process.version.match(/^v0/))
+            process.stdin.removeAllListeners('data');
     
         // Create a screen object
         screen = blessed.screen({
