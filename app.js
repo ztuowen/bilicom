@@ -160,10 +160,14 @@ var app = function(){
             var argv = require('yargs')
                 .usage('usage: $0 [liveid] <options>')
                 .demand(1)
+                .boolean('L','login')
+                .describe('L','Bilibili login')
                 .alias('c', 'cookie')
                 .describe('c', 'use cookie string')
                 .alias('C', 'cookie-file')
                 .describe('C', 'use cookie file(load/store,encrypted)')
+                .alias('p', 'picexec')
+                .describe('p', 'picture viewer(default:gpicview)')
                 .boolean('l','log')
                 .describe('l','enable logging')
                 .alias('d','dir')
@@ -188,25 +192,33 @@ var app = function(){
                 logStream.write(new Buffer([0x00,0x00]));
             }
             var fname = null;
-            if (argv.C) fname = argv.C;
-            if (argv.c)
-            {
-                    comsend=require('./commentsend.js').comsend();
-                    comsend.initUnenc(fname,argv.c,liveid,initBlessed);
+            if (argv.L) {
+                require('./commentsend.js').login().login(null,null,afterLogin,argv.p);
             }
-            else {
-                var st;
-                try{
-                    st=fs.statSync(fname);
-                    if (st.isFile())
-                    {
+            else
+                afterLogin(argv.c)
+            function afterLogin(cookie)
+            {
+                if (argv.C) fname = argv.C;
+                if (cookie)
+                {
                         comsend=require('./commentsend.js').comsend();
-                        comsend.init(fname,liveid,initBlessed);
-                    }
-                    else
+                        comsend.initUnenc(fname,cookie,liveid,initBlessed);
+                }
+                else {
+                    var st;
+                    try{
+                        st=fs.statSync(fname);
+                        if (st.isFile())
+                        {
+                            comsend=require('./commentsend.js').comsend();
+                            comsend.init(fname,liveid,initBlessed);
+                        }
+                        else
+                            initBlessed();
+                    } catch (e) {
                         initBlessed();
-                } catch (e) {
-                    initBlessed();
+                    }
                 }
             }
         }
@@ -315,7 +327,6 @@ var app = function(){
         function runmpv(){
             Bili_live.getLiveUrls(liveid, function(err,url){
                 if (err==null) {
-                    //console.log(url);
                     var child = child_process.spawn('mpv',[url],{detached:true, stdio: [ 'ignore', 'ignore', 'ignore' ]});
                     child.unref();
                 }
