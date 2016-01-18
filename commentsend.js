@@ -7,6 +7,7 @@ var readline = require('readline');
 var fs = require('fs');
 var NodeRSA = require('node-rsa');
 var child_process = require("child_process");
+var os = require("os");
 
 // TODO needs a better way of defining a class than using closure
 exports.comsend = function (){
@@ -78,7 +79,7 @@ exports.comsend = function (){
 };
 
 var baseurl = 'https://account.bilibili.com';
-const captname = "captcha.png";
+const captname = os.tmpdir()+"/captcha.png";
 
 exports.login = function (){
     var request = require('request').defaults({jar: true});

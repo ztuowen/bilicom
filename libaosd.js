@@ -47,7 +47,7 @@ exports.notify = function(msg,options) {
 
 // Raw aosd_cat options
 // Input: msg & options
-callnotify = function(msg, options) {
+callnotify = function(msg, options,errcb) {
     var args = [],
       options = options || {};
     var EOF = new Buffer(1); EOF[0] = -1;
@@ -58,9 +58,17 @@ callnotify = function(msg, options) {
     if (options.align) args.push('-A', options.align);
     if (options.position) args.push('-p', options.position);
     if (options.color) args.push('-R',options.color);
+    if (options.help) args.push('h');
     args.push('-n', options.font+' '+options.fontsize);
     args.push('-b','255','-B','black','-x','0');
     var osd = child_process.spawn('aosd_cat',args,{detached:true});
-    osd.stdin.write(msg);
-    osd.stdin.end();
+    if (errcb)
+        osd.on('error',errcb);
+    if (!options.help)
+    {
+        osd.stdin.write(msg);
+        osd.stdin.end();
+    }
 }
+
+exports.callnotify = callnotify;

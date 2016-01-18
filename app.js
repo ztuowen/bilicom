@@ -14,6 +14,7 @@ var app = function(){
         "showWelcome":['w',true,'欢迎信息'],
         "notify":['n',false,'弹幕提示'],
     };
+    var notify=true;
     var child_process = require('child_process');
     var comsend=null;
 
@@ -245,7 +246,8 @@ var app = function(){
                     runmpv();
                     break;
                 case 'n':
-                    config.notify[1] = !config.notify[1];
+                    if (notify)
+                        config.notify[1] = !config.notify[1];
                     break;
                 case 't':
                     config.showTime[1] = !config.showTime[1];
@@ -321,6 +323,10 @@ var app = function(){
 
             nowclient=connectCommentServer(chat_id);
         }(liveid));
+        libnotify.callnotify("",{help:true},function(){
+            cmtBox.insertLine(0,"[系统] ".red.bold+"aosd_cat没有找到，请验证libaosd安装是否成功".bold);
+            notify =false;
+        });
         /**
          * Open media player
          */
