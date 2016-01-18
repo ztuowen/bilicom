@@ -29,9 +29,11 @@ exports.comsend = function (){
                     rl.close();
                     var enc=crypto.AES.encrypt(ck,passwd).toString();
                     fs.writeFile(fname,enc);
+                    callback();
                 });
             }
-            callback();
+            else
+                callback();
         },
         // Init with a cookie file
         init: function(fname,roomid,callback){
