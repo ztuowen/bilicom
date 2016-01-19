@@ -90,7 +90,6 @@ exports.login = function (){
             function getLoginKey(err,response,body) {
                 if (!uname)
                     read({prompt:'用户名? '}, function (err,answer) {
-                        rl.close();
                         uname = answer;
                         readPasswd();
                     });
@@ -118,7 +117,6 @@ exports.login = function (){
                         fs.unlink(captname);
 
                         captcha = answer;
-                        rl.close();
                         
                         request({method:'GET',
                             url:baseurl+"/login?act=getkey&_="+(new Date).getTime(),
