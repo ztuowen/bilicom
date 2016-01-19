@@ -6,30 +6,20 @@ var lang={
     b1: 'failed to connect to server'
     };
 
-exports.getLivePageInfo = function(liveid,callback){
-    if(!liveid) return callback("liveid"+lang.a1);
-
+exports.getRoomID = function(liveid,callback){
+    
     var options = {
-        url: 'http://live.bilibili.com/live/'+liveid+'.html',
+        url: 'http://live.bilibili.com/'+liveid,
         gzip: true
     };
     function rcallback(error, response, body) {
         if (!error && response.statusCode == 200) {
-            var tmp,sch_id,meta_id,state;
-            tmp = body.match(/sch_id \= (.*?)\;/);
-            if(tmp&&tmp.length>=2) sch_id = tmp[1];
-            tmp = body.match(/meta_id \= (.*?)\;/);
-            if(tmp&&tmp.length>=2) meta_id = tmp[1];
-            tmp = body.match(/state\: \'(.*?)\'/);
-            if(tmp&&tmp.length>=2) state = tmp[1];
-            return callback(null,{
-                sch_id:sch_id,
-                meta_id:meta_id,
-                state:state
-            });
-        }else{
-            return callback(lang.b1);
-        }
+            var tmp,roomid;
+            tmp = body.match(/ROOMID \= (.*?)\;/);
+            if(tmp&&tmp.length>=2) roomid = tmp[1];
+            return callback(roomid);
+        }else
+            callback(liveid);
     }
     request(options, rcallback);
 };

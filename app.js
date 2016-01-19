@@ -176,28 +176,34 @@ var app = function(){
                 .help('help')
                 .argv;
             liveid=argv._[0];
-            if (argv.d)
-                cwd=argv.d;
-            else
-                cwd=process.cwd();
-            var wOption = {
-                flags: 'a',
-                encoding: null,
-                mode: '0666'
-            };
-            if (argv.l)
+            Bili_live.getRoomID(liveid,afterRID);
+            function afterRID(rid)
             {
-                logStream = fs.createWriteStream(cwd+'/'+liveid+'_'+new Date().getTime()+'.source',wOption);
-                var liveinfo = {liveid: liveid};
-                logStream.write(new Buffer(JSON.stringify(liveinfo)));
-                logStream.write(new Buffer([0x00,0x00]));
+                liveid=rid;
+                if (argv.d)
+                    cwd=argv.d;
+                else
+                    cwd=process.cwd();
+                var wOption = {
+                    flags: 'a',
+                    encoding: null,
+                    mode: '0666'
+                };
+
+                if (argv.l)
+                {
+                    logStream = fs.createWriteStream(cwd+'/'+liveid+'_'+new Date().getTime()+'.source',wOption);
+                    var liveinfo = {liveid: liveid};
+                    logStream.write(new Buffer(JSON.stringify(liveinfo)));
+                    logStream.write(new Buffer([0x00,0x00]));
+                }
+                var fname = null;
+                if (argv.L) {
+                    require('./commentsend.js').login().login(null,null,afterLogin,argv.p);
+                }
+                else
+                    afterLogin(argv.c);
             }
-            var fname = null;
-            if (argv.L) {
-                require('./commentsend.js').login().login(null,null,afterLogin,argv.p);
-            }
-            else
-                afterLogin(argv.c)
             function afterLogin(cookie)
             {
                 if (argv.C) fname = argv.C;
@@ -335,7 +341,7 @@ var app = function(){
             Bili_live.getLiveUrls(liveid, function(err,url){
                 if (err==null) {
                     var child = child_process.spawn('mpv',['-v'],{detached:true,stdio: [ 'ignore', 'ignore', 'ignore' ]});
-                    child.on('error',function(){
+                    child.on('error',function(err){
                         cmtBox.insertLine(0,"[系统] ".red.bold+"mpv没有找到，请验证mpv安装是否成功".bold);
                     });
                     child.on('close',function(code){
@@ -358,12 +364,17 @@ var app = function(){
     function connectCommentServer(cid){
         var server= new CommentClient();
 
-        server.on('server_error', function(error) {
-            cmtBox.insertLine(0,"[系统] ".bold.red + ("服务器发生错误:" + error).bold);
+        server.on('server_error', function(err) {
+            if (err.code)
+                cmtBox.insertLine(0,"[系统] ".red.bold+("与服务器链接中断: "+err.code).bold);
+            else
+                cmtBox.insertLine(0,"[系统] ".bold.red + ("服务器发生错误: " + err).bold);
         });
         server.on('close', function() {
-            cmtBox.insertLine(0,"[系统] ".bold.red + "连接已中断,正在重新建立链接".bold);
-            nowclient = nowclient.connect(liveid);
+            cmtBox.insertLine(0,"[系统] ".bold.red + "5s后重新建立链接".bold);
+            setTimeout(function(){
+                nowclient.connect(liveid);
+            }, 5000);
         });
         server.on('error', function(error) {
             cmtBox.insertLine(0,"[系统] ".bold.red + ("发生错误:" + error).bold);

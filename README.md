@@ -2,22 +2,25 @@
 
 ***DISCLAIMER this is a fork of the [original project](https://coding.net/u/payne/p/bili-comment/git) by payne***
 
-`Bilibili 直播弹幕助手` 是一个帮助Linux播主快速查看直播弹幕的工具。
+`Bilibili 直播弹幕助手` 是一个帮助播主快速查看直播弹幕以及摆脱Flash观看B站直播的软件。
 
 有几个功能：
 
-1. 同步连接bilibili弹幕服务器
-2. 发送弹幕(使用cookie或者登录)
-3. 保存密码加密后的cookie-file，不用重复登录/使用cookie
-4. 保存弹幕
-5. 观看B站直播视频流
-6. 弹幕通过aosd在屏幕上显示
+* 同步连接B站弹幕服务器
+* 断线重连
+* 弹幕通过aosd在屏幕上显示
+* 保存弹幕
+* 发送弹幕(使用cookie或者登录)
+* 保存密码加密后的cookie-file，不用重复登录/使用cookie
+* 观看B站直播视频流
 
 ## 安装与使用
 
 ### 安装
 
 1. 安装所需的软件: nodejs, mpv, [libaosd(aosd_cat)](https://github.com/mkoskar/libaosd-xinerama)
+  * mpv - 观看直播视频
+  * libaosd - 屏幕上显示弹幕
 2. 安装本弹幕助手: `sudo npm install -g bilicom`
 
 [***如何安装libaosd***](https://github.com/ztuowen/bilicom/issues/2)
@@ -70,17 +73,9 @@ D	|	（发送测试弹幕）
 
 ***Cookie file***
 
-1. **如果想要把cookie保存到cookie-file需要使用-C <filename>指定文件**
-2. 保存后再使用时只需指定cookie-file就可以发弹幕了
-
-***由于一些新加的功能，目前以下功能只能在linux下使用***
-
-* 屏幕上弹幕提示 - aosd
-* 观看直播间视频 - mpv
-
-## 已知问题
-
-Bilibili的直播间链接不一定是直播间号，目前需要看html源码来查看一致性
+1. **`-C <filename>`指定文件，即可保存cookie(会询问加密密码)**
+2. 使用时需指定`-C <filename>` 指定cookie-file
+3. 解密后就可以发弹幕了
 
 ## 没图说个XX
 

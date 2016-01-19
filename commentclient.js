@@ -51,16 +51,13 @@ function Client(base) {
         }
     });
     this.client.on('error', function(error) {
-        var self = this;
         self.state = 1;
-        //self.client.destory();
-        clearTimeout(self.timer);
+        clearTimeout(this.timer);
         self.timer=null;
         self.emit('server_error', error);
     });
     this.client.on('close', function() {
-        var self = this;
-        self.state = 1;
+        self.state = 0;
         clearTimeout(self.timer);
         self.timer=null;
         self.emit('close');
@@ -77,7 +74,9 @@ util.inherits(Client, events.EventEmitter);
 Client.prototype.connect = function(chatid, userid, pwd) {
     var self = this;
     if (this.state != 0) return;
-    this.client.connect(self.base.port, self.base.host, function() {
+    this.client.connect(self.base.port, self.base.host, function(err) {
+        if (err)
+            console.log(err);
         var length;
         if(pwd && userid) { //length
             length = 20;
@@ -226,3 +225,10 @@ function pack_data(index, payload) {
     return bufferdata;
 }
 exports.Client = Client;
+
+cli = new Client();
+cli.connect(47917);
+
+(function trap(){
+    setTimeout(trap,3000);
+})();
