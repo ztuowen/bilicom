@@ -31,12 +31,12 @@
 
 命令行参数：
 
-* `-c`或`--cookie` <string> : 设置cookie
-* `-C`或`--cookie-file` <filename> : 设置cookie文件名
+* `-c`或`--cookie` \<string\> : 设置cookie
+* `-C`或`--cookie-file` \<filename\> : 设置cookie文件名
 * `-l`或`--log` : 保存弹幕
-* `-d`或`--dir` <dirname> : 设置弹幕保存目录
+* `-d`或`--dir` \<dirname\> : 设置弹幕保存目录
 * `-L`或`--login` : 登录B站
-* `-p`或`--picexec` <program name> : 查看验证码的程序（<program name> <filename>可以看图片的那种）
+* `-p`或`--picexec` \<program name\> : 查看验证码的程序（\<program name\> \<filename\>可以看图片的那种）
 
 快捷键|	效果
 -----|	---------------
