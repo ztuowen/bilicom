@@ -21,9 +21,9 @@ var app = function(){
     var blessed = require('blessed');
     var screen,cmtBox,liveid,viewNum;
     var intervals=[];
-    var postag=['topleft','topmid','topright','botleft','botmid','botright'];
+    var postag=[['topleft','上左'],['topmid','上中'],['topright','上右'],['botleft','下左'],['botmid','下中'],['botright','下右']];
     var curpos=0;
-    var notconf={loc:postag[curpos],
+    var notconf={loc:postag[curpos][0],
         size:16
     };
     var cwd;
@@ -146,7 +146,7 @@ var app = function(){
         }
         footer.setContent('  {white-fg}{black-bg}q{/black-bg}{/white-fg}'+scrmul('退出')
                 +'  {white-fg}{black-bg}m{/black-bg}{/white-fg}'+scrmul('播放器')
-                +'  {white-fg}{black-bg}p{/black-bg}{/white-fg}'+scrmul(notconf.loc)
+                +'  {white-fg}{black-bg}p{/black-bg}{/white-fg}'+scrmul(postag[curpos][1])
                 +'  {white-fg}{black-bg}+/-{/black-bg}{/white-fg}'+scrmul(notconf.size)+text);
         function scrmul(str){
             if (screen.width>90)
@@ -266,7 +266,7 @@ var app = function(){
                     config.showWelcome[1]= !config.showWelcome[1];
                     break;
                 case 'p':
-                    notconf.loc=postag[curpos=(curpos+1)%6];
+                    notconf.loc=postag[curpos=(curpos+1)%6][0];
                     break;
                 case 'D':
                     libnotify.notify("[测试] 这只是一个测试",notconf);
@@ -373,7 +373,7 @@ var app = function(){
         server.on('close', function() {
             cmtBox.insertLine(0,"[系统] ".bold.red + "5s后重新建立链接".bold);
             setTimeout(function(){
-                nowclient.connect(liveid);
+                nowclient = connectCommentServer(liveid);
             }, 5000);
         });
         server.on('error', function(error) {
