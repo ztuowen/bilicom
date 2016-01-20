@@ -201,7 +201,6 @@ var app = function(){
                     logStream.write(new Buffer(JSON.stringify(liveinfo)));
                     logStream.write(new Buffer([0x00,0x00]));
                 }
-                var fname = null;
                 if (argv.L) {
                     require('./commentsend.js').login().login(null,null,afterLogin,argv.p);
                 }
@@ -210,6 +209,7 @@ var app = function(){
             }
             function afterLogin(cookie)
             {
+                var fname = null;
                 if (argv.C) fname = argv.C;
                 if (cookie)
                 {
