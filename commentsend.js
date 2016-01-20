@@ -24,7 +24,7 @@ exports.comsend = function (){
             rid = roomid;
             if (fname)
             {
-                read({prompt:'设置cookie保存文件的密码? ',silent:true,replace:'*'}, function (err,passwd) {
+                read({prompt:'设置cookie保存文件的密码? ',silent:true,replace:'*',terminal:true}, function (err,passwd) {
                     var enc=crypto.AES.encrypt(ck,passwd).toString();
                     fs.writeFile(fname,enc);
                     callback();
@@ -38,7 +38,7 @@ exports.comsend = function (){
             rid = roomid;
             rnd=Math.round((new Date).getTime()/1000);
             
-            read({prompt:'请输入cookie保存文件的密码? ',silent:true,replace:'*'}, function (err,passwd) {
+            read({prompt:'请输入cookie保存文件的密码? ',silent:true,replace:'*',terminal:true}, function (err,passwd) {
                 fs.readFile(fname,function (err,data) {
                     var dec = crypto.AES.decrypt(data.toString(),passwd);
                     cookie = dec.toString(crypto.enc.Utf8);
@@ -99,7 +99,7 @@ exports.login = function (){
             }
             function getLoginKey(err,response,body) {
                 if (!uname)
-                    read({prompt:'用户名? '}, function (err,answer) {
+                    read({prompt:'用户名? ',terminal:true}, function (err,answer) {
                         uname = answer;
                         readPasswd();
                     });
@@ -107,7 +107,7 @@ exports.login = function (){
                     readPasswd();
                 function readPasswd() {
                     if (!passwd)
-                        read({prompt:'密码? ',silent:true,replace:'*'},function (err,answer) {
+                        read({prompt:'密码? ',silent:true,replace:'*',terminal:true},function (err,answer) {
                             passwd = answer;
                             readCaptcha();
                         });
@@ -120,7 +120,7 @@ exports.login = function (){
                     captview.on('error',function(){
                         console.log("使用"+picexec+"打开验证码失败，请手动打开"+captname+"查看");
                     });
-                    read({prompt:'验证码? '},function (err,answer) {
+                    read({prompt:'验证码? ',terminal:true},function (err,answer) {
                         try{
                             captview.kill();
                         }catch(e){}
