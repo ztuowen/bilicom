@@ -48,7 +48,7 @@ exports.comsend = function (){
 
         },
         // Send messages to bilibili comments server
-        send: function(msg){
+        send: function(msg,errcbk){
             var form={color:16777215,
             fontsize:25,
             mode:1,
@@ -61,7 +61,17 @@ exports.comsend = function (){
                 Host: 'live.bilibili.com',
                 Origin: 'http://live.bilibili.com',
                 Referer: 'http://live.bilibili.com/',
-            }}).form(form);
+            }},function(err,response,data)
+            {
+                if (err)
+                    errcbk("网络连接出错");
+                else
+                {
+                    data = JSON.parse(data);
+                    if (data.code)
+                        errcbk(data.msg);
+                }
+            }).form(form);
         }
     }
 };

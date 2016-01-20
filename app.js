@@ -126,7 +126,11 @@ var app = function(){
             var message = this.getValue().replace(/(\r\n|\n|\r)/gm,"");
             this.clearValue();
             if (comsend && message.length > 0)
-                comsend.send(message);
+            {
+                comsend.send(message,function (errmsg){
+                    cmtBox.insertLine(0,"[系统] ".bold.red+("弹幕发送失败："+errmsg).bold);
+                });
+            }
             screen.rewindFocus();
             screen.render();
         });
