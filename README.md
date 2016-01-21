@@ -18,7 +18,8 @@
 
 ### 安装
 
-1. 安装所需的软件: nodejs, mpv, [libaosd(aosd_cat)](https://github.com/mkoskar/libaosd-xinerama)
+1. 安装必须的软件: nodejs
+2. 安装可选软件: mpv, [libaosd(aosd_cat)](https://github.com/mkoskar/libaosd-xinerama)
   * mpv - 观看直播视频
   * libaosd - 屏幕上显示弹幕
 2. 安装本弹幕助手: `sudo npm install -g bilicom`
