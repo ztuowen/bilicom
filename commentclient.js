@@ -9,7 +9,7 @@ function Client(base) {
     events.EventEmitter.call(this);
     this.base = base;
     if(!this.base) this.base={
-        host: "livecmt.bilibili.com",
+        host: "livecmt-1.bilibili.com",
         port: 88
     };
     this.state = 0; //0 未连接 1 待命 2 数据接收未完成
