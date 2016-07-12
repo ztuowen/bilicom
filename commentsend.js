@@ -76,7 +76,7 @@ exports.comsend = function (){
     }
 };
 
-var baseurl = 'https://account.bilibili.com';
+var baseurl = 'https://passport.bilibili.com';
 const captname = os.tmpdir()+"/captcha.png";
 
 exports.login = function (){
@@ -94,7 +94,7 @@ exports.login = function (){
                 request({url:baseurl+"/captcha",
                     jar:cookiejar,
                     headers: {
-                        Referer: 'https://account.bilibili.com/ajax/miniLogin/minilogin'
+                        Referer: 'https://passport.bilibili.com/ajax/miniLogin/minilogin'
                     }},getLoginKey).pipe(fs.createWriteStream(captname));
             }
             function getLoginKey(err,response,body) {
@@ -133,7 +133,7 @@ exports.login = function (){
                             gzip: true,
                             jar:cookiejar,
                             headers: {
-                                Referer: 'https://account.bilibili.com/ajax/miniLogin/minilogin'
+                                Referer: 'https://passport.bilibili.com/ajax/miniLogin/minilogin'
                             }
                         },encodeLoginInfo);
                     });
@@ -154,9 +154,9 @@ exports.login = function (){
                             headers: {
                                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
                                 'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36',
-                                Host: 'account.bilibili.com',
-                                Origin: 'https://account.bilibili.com',
-                                Referer: 'https://account.bilibili.com/ajax/miniLogin/minilogin'
+                                Host: 'passport.bilibili.com',
+                                Origin: 'https://passport.bilibili.com',
+                                Referer: 'https://passport.bilibili.com/ajax/miniLogin/minilogin'
                             },
                         },checkLoginRet).form(form);
                 }
