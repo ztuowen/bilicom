@@ -1,6 +1,6 @@
 ﻿# bilicom Bilibili 直播弹幕助手
 
-***DISCLAIMER this is a fork of the [original project](https://coding.net/u/payne/p/bili-comment/git) by payne***
+***This is based on the [original project](https://coding.net/u/payne/p/bili-comment/git) by payne***
 
 `Bilibili 直播弹幕助手` 是一个帮助播主快速查看直播弹幕以及摆脱Flash观看B站直播的软件。
 
