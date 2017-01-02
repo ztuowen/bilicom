@@ -429,7 +429,6 @@ var app = function(){
                     if (config.showWelcome[1]){
                         data=data.data;
                         var text='';
-                        var username = selectColorText(data.uname,data.uid).bold;
                         text += colors.yellow("欢迎") + " " + colors.red(data.uname) + " " + colors.yellow("进入直播间");
                         cmtBox.insertLine(0,"[欢迎] ".bold.yellow + text);
                         if (config.notify[1])
@@ -449,9 +448,7 @@ var app = function(){
 
                     //获取发布者名称
                     var username = '';
-                    if(data.length == 6){
-                        username = selectColorText(data[2][1],data[2][0]).bold + " ";
-                    }
+                    username = selectColorText(data[2][1],data[2][0]).bold + " ";
                     if(data[3].length>0) {
                         username = colors.blue("(" + data[3][1] + ")") + username;
                     }

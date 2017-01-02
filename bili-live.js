@@ -17,7 +17,7 @@ exports.getRoomID = function(liveid,callback){
             var tmp,roomid;
             tmp = body.match(/ROOMID \= (.*?)\;/);
             if(tmp&&tmp.length>=2) roomid = tmp[1];
-            return callback(roomid);
+            return callback(parseInt(roomid));
         }else
             callback(liveid);
     }
