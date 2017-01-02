@@ -4,6 +4,7 @@ var app = function(){
     var colors = require('colors');
     var libnotify = require('./libaosd.js');
     var pkginfo = require('./package.json');
+    var request = require('request').defaults({jar: true});
 
     var CommentClient = require('./commentclient.js').Client;
     var Bili_live = require('./bili-live.js');
@@ -332,7 +333,7 @@ var app = function(){
         (function(chat_id){
             cmtBox.insertLine(0,("=========直播间信息=========\nchat_id : " + chat_id.toString() + "\n============================").cyan);
 
-            nowclient=connectCommentServer(chat_id);
+            setupClient(chat_id);
         }(liveid));
         libnotify.callnotify("",{help:true},function(){
             cmtBox.insertLine(0,"[系统] ".red.bold+"aosd_cat没有找到，请验证libaosd安装是否成功".bold);
@@ -359,14 +360,19 @@ var app = function(){
             });
         }
     };
-
+    function setupClient(cid) {
+        Bili_live.getChatServer(cid, function(host) {
+            nowclient = connectCommentServerWithHost(cid,host);
+        })
+    }
     /**
      * 连接弹幕服务器
      * @param cid
+     * @param host
      * @returns {*|Client}
      */
-    function connectCommentServer(cid){
-        var server= new CommentClient();
+    function connectCommentServerWithHost(cid, host){
+        var server= new CommentClient({host: host, port: 788});
 
         server.on('server_error', function(err) {
             if (err.code)
@@ -377,7 +383,7 @@ var app = function(){
         server.on('close', function() {
             cmtBox.insertLine(0,"[系统] ".bold.red + "5s后重新建立链接".bold);
             setTimeout(function(){
-                nowclient = connectCommentServer(liveid);
+                setupClient(liveid);
             }, 5000);
         });
         server.on('error', function(error) {

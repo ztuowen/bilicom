@@ -8,10 +8,6 @@ function Client(base) {
     var self = this;
     events.EventEmitter.call(this);
     this.base = base;
-    if(!this.base) this.base={
-        host: "livecmt-1.bilibili.com",
-        port: 88
-    };
     this.state = 0; //0 未连接 1 待命 2 数据接收未完成
     this.buffer_data; //缓冲区的数据
     this.buffer_length; //缓冲区的总大小
@@ -226,8 +222,8 @@ function pack_data(index, payload) {
 }
 exports.Client = Client;
 
-cli = new Client();
-cli.connect(47917);
+cli = new Client({host: 'libecmt-1.bilibili.com', port: 788});
+cli.connect(53714);
 
 (function trap(){
     setTimeout(trap,3000);

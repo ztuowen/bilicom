@@ -24,6 +24,23 @@ exports.getRoomID = function(liveid,callback){
     request(options, rcallback);
 };
 
+exports.getChatServer = function(roomid, callback){
+    var options = {
+        url: 'http://live.bilibili.com/api/player?id=cid:'+roomid,
+        gzip: true
+    };
+    function rcallback(error, response, body) {
+        if (!error && response.statusCode == 200) {
+            var tmp,server;
+            tmp = body.match(/<server>(.*?)<\/server>/);
+            if (tmp && tmp.length>=2) server = tmp[1];
+            return callback(server);
+        } else
+            callback("livecmt-1.bilibili.com");
+    }
+    request(options, rcallback);
+};
+
 exports.getLiveInfo = function(liveid,callback){
     if(!liveid) return callback("liveid"+lang.a1);
 
